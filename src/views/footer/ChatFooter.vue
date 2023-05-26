@@ -1,5 +1,6 @@
 <script setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
+import Emoji from "@/components/Emoji.vue";
 
 const props = defineProps({
   modelValue: String,
@@ -16,9 +17,21 @@ const message = computed({
   },
 });
 
+const showEmoji = ref(false);
+const handleEmojiClick = (e) => {
+  message.value = message.value + e
+};
 </script>
 <template>
   <div class="chat-footer">
+    <div class="emoji-container">
+      <Emoji @emojiClick="handleEmojiClick" v-show="showEmoji" />
+    </div>
+    <div class="tools">
+      <el-icon class="tool-item" :size="20" @click="showEmoji = !showEmoji">
+        <Star />
+      </el-icon>
+    </div>
     <textarea
       v-focus
       class="send-ipt"
@@ -31,8 +44,21 @@ const message = computed({
 </template>
 <style lang="scss" scoped>
 .chat-footer {
+  position: relative;
+  user-select: none;
   padding: 10px;
   border-top: 1px solid #3e4452;
+  .emoji-container {
+    position: absolute;
+    top: -10px;
+    transform: translateY(-100%);
+  }
+  .tools {
+    margin-bottom: 10px;
+    .tool-item {
+      cursor: pointer;
+    }
+  }
   .send-ipt {
     height: 100px;
     width: 100%;

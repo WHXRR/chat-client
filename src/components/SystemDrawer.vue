@@ -89,6 +89,7 @@ const exit = () => {
   flex-direction: column;
   align-items: center;
   margin-bottom: 40px;
+  user-select: none;
   .avatar-uploader {
     width: 140px;
     height: 140px;
@@ -125,6 +126,7 @@ const exit = () => {
   padding: 10px;
   font-size: 14px;
   border-radius: 5px;
+  user-select: none;
   transition: all 0.3s;
   &:hover {
     transform: scale(1.01);

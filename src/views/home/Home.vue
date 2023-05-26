@@ -5,7 +5,7 @@ import ChatMain from "@/views/main/ChatMain.vue";
 import { ref, nextTick, provide } from "vue";
 import { useStore } from "@/store/user";
 import { io } from "socket.io-client";
-import { ElMessage, ElNotification } from "element-plus";
+import { ElNotification } from "element-plus";
 
 const store = useStore();
 const message = ref("");
@@ -15,7 +15,7 @@ provide('socket', socket);
 // 连接成功
 socket.on("connect", () => {
   ElNotification({
-    message: `欢迎${store.user.username}来到聊天室~`,
+    message: `欢迎${store.user.username}来到聊天室~`, 
     type: "success",
   });
 });
