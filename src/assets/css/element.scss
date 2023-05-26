@@ -1,0 +1,23 @@
+@forward "element-plus/theme-chalk/src/common/var.scss" with (
+  $colors: (
+    "primary": (
+      "base": #323842,
+    ),
+  ),
+  $bg-color: (
+    "": "#323842",
+    "overlay": "#323842",
+  ),
+  $border-color: (
+    "lighter": "#323842",
+  ),
+  $notification: (
+    "content-color": "#eaeaea",
+    "title-color": "#eaeaea",
+  ),
+  $messagebox: (
+    "content-color": "#eaeaea",
+  )
+);
+
+@use "element-plus/theme-chalk/src/index.scss" as *;
