@@ -12,8 +12,7 @@ export const register = (data) => api({
   url: '/api/register',
   method: 'post',
   data,
-  loading: true,
-  tips: true
+  loading: true
 })
 
 export const getUserInfo = () => api({

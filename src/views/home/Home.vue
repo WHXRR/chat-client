@@ -5,7 +5,7 @@ import ChatMain from "@/views/main/ChatMain.vue";
 import { ref, nextTick, provide } from "vue";
 import { useStore } from "@/store/user";
 import { io } from "socket.io-client";
-import { ElMessage } from "element-plus";
+import { ElMessage, ElNotification } from "element-plus";
 
 const store = useStore();
 const message = ref("");
@@ -14,7 +14,7 @@ const socket = io("ws://192.168.1.7:5432");
 provide('socket', socket);
 // 连接成功
 socket.on("connect", () => {
-  ElMessage({
+  ElNotification({
     message: `欢迎${store.user.username}来到聊天室~`,
     type: "success",
   });
@@ -22,7 +22,7 @@ socket.on("connect", () => {
 
 // 断开连接
 socket.on("disconnect", () => {
-  ElMessage({
+  ElNotification({
     message: "退出成功",
     type: "success",
   });
@@ -33,7 +33,7 @@ const allPeoples = ref(0);
 socket.on("message", (data) => {
   if (!data.status) {
     store.clearToken();
-    return ElMessage({
+    return ElNotification({
       message: data.data,
       type: "error",
     });
