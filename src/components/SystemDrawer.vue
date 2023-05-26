@@ -1,17 +1,15 @@
 <script setup>
 import baseURL from "@/axios/base";
 import api from "@/api";
-import { computed, inject } from "vue";
+import socket from "@/utils/socket";
+import { computed } from "vue";
 import { useStore } from "@/store/user";
 import { systemStore } from "@/store/system";
 import { storeToRefs } from "pinia";
-import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 
-const socket = inject("socket");
 const store = useStore();
 const sysStore = systemStore();
-const router = useRouter();
 const { user } = storeToRefs(store);
 const props = defineProps(["modelValue"]);
 const emit = defineEmits(["update:modelValue"]);
@@ -50,13 +48,7 @@ const saveInfo = () => {
 };
 
 const exit = () => {
-  socket.disconnect();
-  store.token = "";
-  localStorage.removeItem("token");
-  router.replace({
-    name: "Login",
-  });
-  // store.clearToken()
+  store.clearToken();
 };
 </script>
 <template>

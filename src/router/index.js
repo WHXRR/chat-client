@@ -3,7 +3,6 @@ import pinia from '@/store'
 import { useStore } from "@/store/user";
 import { createRouter, createWebHistory } from 'vue-router';
 import routes from './routes'
-const store = useStore(pinia);
 export const router = createRouter({
   history: createWebHistory(),
   // 应该添加到路由的初始路由列表。
@@ -17,6 +16,7 @@ export function setupRouter(app) {
 }
 
 router.beforeEach((to, from, next) => {
+  const store = useStore(pinia);
   if (!store.token && to.name !== 'Login') {
     next({ name: 'Login' })
   } else if (store.token && to.name === 'Login') {

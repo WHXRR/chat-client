@@ -2,16 +2,13 @@
 import ChatHeader from "@/views/header/ChatHeader.vue";
 import ChatFooter from "@/views/footer/ChatFooter.vue";
 import ChatMain from "@/views/main/ChatMain.vue";
-import { ref, provide, nextTick } from "vue";
+import { ref, nextTick } from "vue";
 import { useStore } from "@/store/user";
-import { useSocket } from "@/hooks";
+import socket from "@/utils/socket";
 import { ElMessage } from "element-plus";
 
 const store = useStore();
 const message = ref("");
-
-const socket = useSocket();
-provide("socket", socket);
 
 // 连接成功
 socket.on("connect", () => {
@@ -33,6 +30,7 @@ socket.on("disconnect", () => {
 const allPeoples = ref(0);
 socket.on("message", (data) => {
   if (!data.status) {
+    store.clearToken();
     return ElMessage({
       message: data.data,
       type: "error",
