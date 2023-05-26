@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { router } from '@/router'
 import api from '@/api'
-import socket from "@/utils/socket";
+// import socket from "@/utils/socket";
 export const useStore = defineStore('user', {
   state: () => {
     return {
@@ -11,7 +11,7 @@ export const useStore = defineStore('user', {
   },
   actions: {
     clearToken() {
-      socket.disconnect();
+      // socket.disconnect();
       this.token = ''
       localStorage.removeItem("token");
       router.replace({

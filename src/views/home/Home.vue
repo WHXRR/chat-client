@@ -2,14 +2,16 @@
 import ChatHeader from "@/views/header/ChatHeader.vue";
 import ChatFooter from "@/views/footer/ChatFooter.vue";
 import ChatMain from "@/views/main/ChatMain.vue";
-import { ref, nextTick } from "vue";
+import { ref, nextTick, provide } from "vue";
 import { useStore } from "@/store/user";
-import socket from "@/utils/socket";
+import { io } from "socket.io-client";
 import { ElMessage } from "element-plus";
 
 const store = useStore();
 const message = ref("");
 
+const socket = io("ws://192.168.1.7:5432");
+provide('socket', socket);
 // 连接成功
 socket.on("connect", () => {
   ElMessage({

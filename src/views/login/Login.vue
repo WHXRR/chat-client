@@ -77,7 +77,7 @@ const login = async () => {
         :rules="rules"
       >
         <el-form-item label="用户名" prop="username">
-          <el-input v-focus v-model="form.username" />
+          <el-input autofocus v-model="form.username" />
         </el-form-item>
         <el-form-item label="密码" prop="password">
           <el-input

@@ -1,13 +1,13 @@
 <script setup>
 import baseURL from "@/axios/base";
 import api from "@/api";
-import socket from "@/utils/socket";
-import { computed } from "vue";
+import { computed, inject } from "vue";
 import { useStore } from "@/store/user";
 import { systemStore } from "@/store/system";
 import { storeToRefs } from "pinia";
 import { ElMessage } from "element-plus";
 
+const socket = inject("socket");
 const store = useStore();
 const sysStore = systemStore();
 const { user } = storeToRefs(store);
@@ -48,6 +48,7 @@ const saveInfo = () => {
 };
 
 const exit = () => {
+  socket.disconnect();
   store.clearToken();
 };
 </script>
