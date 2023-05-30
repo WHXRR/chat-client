@@ -1,13 +1,22 @@
 <script setup>
 import { useStore } from "@/store/user";
+import { uploadStore } from "@/store/upload";
+import UploadLoading from "@/components/UploadLoading.vue";
 
+const date = new Date();
 const store = useStore();
+const useUploadStore = uploadStore();
 const props = defineProps({
   messageContent: Array,
 });
+
+const downLoadFile = url => {
+  window.open(url, '_black')
+}
 </script>
 <template>
   <div class="chat-main">
+    <!-- 展示消息 -->
     <TransitionGroup name="list" tag="div">
       <div
         :class="`msg-item ${item.sender_id === store.user.id ? 'my' : ''}`"
@@ -20,7 +29,52 @@ const props = defineProps({
             <span>{{ item.username }}</span>
             <span class="time">{{ item.create_time }}</span>
           </div>
-          <div class="msg-content">{{ item.message }}</div>
+          <div v-if="item.type === 'text'" class="msg-content">
+            {{ item.message }}
+          </div>
+          <div v-else-if="item.type === 'image'">
+            <el-image
+              class="img-content"
+              :src="item.message"
+              fit="contain"
+              loading="lazy"
+              :preview-src-list="[item.message]"
+            >
+              <template #placeholder>
+                <div>
+                  {{ item.fileName }}
+                </div>
+              </template>
+              <template #error>
+                <div class="image-slot">
+                  <el-icon :size="50"><Picture /></el-icon>
+                </div>
+              </template>
+            </el-image>
+          </div>
+          <div v-else class="file-content" @click="downLoadFile(item.message)">
+            <div style="margin-right: 20px">{{ item.fileName }}</div>
+            <el-icon color="#ffffff" :size="50"><Folder /></el-icon>
+          </div>
+        </div>
+      </div>
+    </TransitionGroup>
+    <!-- 展示上传文件的loading -->
+    <TransitionGroup name="list" tag="div">
+      <div
+        class="msg-item my"
+        v-for="(item, index) in useUploadStore.uploadArrs"
+        :key="index"
+      >
+        <el-avatar class="avatar" :src="store.user.avatar" />
+        <div class="msg-right">
+          <div class="user-name">
+            <span>{{ store.user.username }}</span>
+            <span class="time">{{ date.toLocaleString() }}</span>
+          </div>
+          <div>
+            <UploadLoading :type="item.type" :percentage="item.percentage" />
+          </div>
         </div>
       </div>
     </TransitionGroup>
@@ -83,6 +137,18 @@ const props = defineProps({
       font-size: 14px;
       word-break: break-all;
       background-color: #fff;
+    }
+    .img-content {
+      max-width: 40vw;
+    }
+    .file-content {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 14px;
+      background-color: #3e4452;
     }
   }
   .my {

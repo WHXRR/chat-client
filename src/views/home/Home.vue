@@ -11,11 +11,11 @@ const store = useStore();
 const message = ref("");
 
 const socket = io("ws://192.168.1.7:5432");
-provide('socket', socket);
+provide("socket", socket);
 // 连接成功
 socket.on("connect", () => {
   ElNotification({
-    message: `欢迎${store.user.username}来到聊天室~`, 
+    message: `欢迎${store.user.username}来到聊天室~`,
     type: "success",
   });
 });
@@ -56,11 +56,29 @@ const date = new Date();
 const send = () => {
   socket.emit("send", {
     message: message.value,
+    type: 'text',
     ...store.user,
     sender_id: store.user.id,
     create_time: date.toLocaleString(),
   });
   message.value = "";
+};
+
+const sendImage = (data) => {
+  socket.emit("send", {
+    ...store.user,
+    ...data,
+    sender_id: store.user.id,
+    create_time: date.toLocaleString(),
+  });
+};
+const sendFile = (data) => {
+  socket.emit("send", {
+    ...store.user,
+    ...data,
+    sender_id: store.user.id,
+    create_time: date.toLocaleString(),
+  });
 };
 
 // 接收消息
@@ -79,7 +97,12 @@ socket.on("back", (msg) => {
     <div class="main" ref="messageContainer">
       <ChatMain :messageContent="messageContent" />
     </div>
-    <ChatFooter v-model="message" @send="send" />
+    <ChatFooter
+      v-model="message"
+      @send="send"
+      @sendImage="sendImage"
+      @sendFile="sendFile"
+    />
   </div>
 </template>
 <style lang="scss" scoped>

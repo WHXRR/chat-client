@@ -25,7 +25,7 @@ const handleAvatarSuccess = (res) => {
 
 const beforeAvatarUpload = (rawFile) => {
   if (!["image/jpeg", "image/png", "image/jpg"].includes(rawFile.type)) {
-    ElMessage.error("图片必须为JPG格式");
+    ElMessage.error("图片必须为jpeg、png、jpeg格式");
     return false;
   } else if (rawFile.size / 1024 / 1024 > 2) {
     ElMessage.error("上传的图片不能超过2MB");

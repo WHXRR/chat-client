@@ -71,7 +71,8 @@ function myAxios(axiosConfig) {
     timeout: 120000,
     headers: {
       Authorization: store.token || localStorage.getItem('token')
-    }
+    },
+    ...axiosConfig?.config
   })
   service.interceptors.request.use(
     config => {

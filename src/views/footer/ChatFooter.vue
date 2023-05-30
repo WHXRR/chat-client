@@ -1,11 +1,18 @@
 <script setup>
-import { computed, ref } from "vue";
+import { computed, nextTick, ref } from "vue";
+import { useStore } from "@/store/user";
+import { ElNotification } from "element-plus";
+import { uploadStore } from "@/store/upload";
+import useClickArea from "@/hooks/useClickArea";
 import Emoji from "@/components/Emoji.vue";
+import api from "@/api";
 
+const store = useStore();
+const useUploadStore = uploadStore();
 const props = defineProps({
   modelValue: String,
 });
-const emit = defineEmits(["send", "update:modelValue"]);
+const emit = defineEmits(["send", "update:modelValue", "sendImage"]);
 const send = () => {
   if (!message.value) return;
   emit("send");
@@ -18,8 +25,87 @@ const message = computed({
 });
 
 const showEmoji = ref(false);
-const handleEmojiClick = (e) => {
-  message.value = message.value + e
+const messageInputRef = ref(null);
+const handleEmojiClick = (emoji) => {
+  showEmoji.value = false;
+  const start = messageInputRef.value.selectionStart;
+  const end = messageInputRef.value.selectionEnd;
+  message.value =
+    message.value.substring(0, start) + emoji + message.value.substring(end);
+  const cursorPos = start + emoji.length;
+  nextTick(() => {
+    messageInputRef.value.focus();
+    messageInputRef.value.setSelectionRange(cursorPos, cursorPos);
+  });
+};
+
+window.addEventListener("click", (e) => {
+  const clickArea = useClickArea("emoji-container", e.target);
+  const iconArea = useClickArea("emoji-icon", e.target);
+  if (iconArea) return;
+  if (!clickArea) {
+    showEmoji.value = false;
+  }
+});
+
+const uploadFile = (file) => {
+  const formData = new FormData();
+  formData.append("file", file.file);
+  const name = file.file.name;
+  const type = file.file.type.includes("image") ? "image" : "file";
+  api
+    .uploadFiles(formData, {
+      onUploadProgress: (progressEvent) => {
+        const percentage = Math.round(
+          (progressEvent.loaded * 100) / progressEvent.total
+        );
+        useUploadStore.uploadObj[name] = {
+          type,
+          percentage,
+        };
+      },
+    })
+    .then((res) => {
+      delete useUploadStore.uploadObj[name];
+      handleSuccess(res, file);
+    })
+    .catch((err) => {
+      delete useUploadStore.uploadObj[name];
+      handleError(err, file);
+    });
+};
+const beforeAvatarUpload = (rawFile) => {
+  if (rawFile.size / 1024 / 1024 > 20) {
+    ElNotification({
+      title: "Warning",
+      message: "上传的内容不能超过20MB!",
+      type: "warning",
+    });
+    return false;
+  }
+  return true;
+};
+const handleSuccess = (res, file) => {
+  if (file.file.type.includes("image/")) {
+    return emit("sendImage", {
+      fileName: file.file.name,
+      message: res.data.url,
+      type: "image",
+    });
+  } else {
+    return emit("sendFile", {
+      fileName: file.file.name,
+      message: res.data.url,
+      type: "file",
+    });
+  }
+};
+const handleError = (error) => {
+  ElNotification({
+    title: "Error",
+    message: error,
+    type: "error",
+  });
 };
 </script>
 <template>
@@ -28,12 +114,31 @@ const handleEmojiClick = (e) => {
       <Emoji @emojiClick="handleEmojiClick" v-show="showEmoji" />
     </div>
     <div class="tools">
-      <el-icon class="tool-item" :size="20" @click="showEmoji = !showEmoji">
+      <el-icon
+        class="tool-item emoji-icon"
+        :size="20"
+        @click="showEmoji = !showEmoji"
+      >
         <Star />
       </el-icon>
+      <el-upload
+        class="upload-file"
+        name="file"
+        :on-success="handleSuccess"
+        :on-error="handleError"
+        :before-upload="beforeAvatarUpload"
+        :show-file-list="false"
+        :http-request="uploadFile"
+        :headers="{
+          Authorization: store.token,
+        }"
+      >
+        <el-icon class="tool-item emoji-icon" :size="20"><Folder /></el-icon>
+      </el-upload>
     </div>
     <textarea
       v-focus
+      ref="messageInputRef"
       class="send-ipt"
       placeholder="请输入..."
       v-model.trim="message"
@@ -54,9 +159,11 @@ const handleEmojiClick = (e) => {
     transform: translateY(-100%);
   }
   .tools {
+    display: flex;
     margin-bottom: 10px;
     .tool-item {
       cursor: pointer;
+      margin-right: 10px;
     }
   }
   .send-ipt {
