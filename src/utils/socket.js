@@ -10,7 +10,6 @@ const socketConnectPromise = new Promise((resolve) => {
 const socketMessagePromise = new Promise((resolve) => {
   socket.on("message", (data) => {
     resolve(data)
-    console.log(data);
   });
 })
 

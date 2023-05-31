@@ -85,6 +85,21 @@ const messageContainer = ref(null);
 const messageContent = ref([]);
 socket.on("back", (msg) => {
   messageContent.value.push(msg);
+  if ("Notification" in window) {
+    const notification = new Notification("新消息", {
+      body: "你有一条新消息",
+    });
+    if (Notification.permission === "granted") {
+      return notification;
+    } else if (Notification.permission !== "denied") {
+      // 请求用户授权
+      Notification.requestPermission().then((permission) => {
+        if (permission === "granted") {
+          return notification;
+        }
+      });
+    }
+  }
   nextTick(() => {
     messageContainer.value.scrollTop = messageContainer.value.scrollHeight;
   });
@@ -92,8 +107,10 @@ socket.on("back", (msg) => {
 
 // 最后一张图懒加载时，将滚动条滚至最底部
 const loadedImg = (id) => {
-  const imgMessages = messageContent.value.filter(item => item.type === 'image')
-  if (id === imgMessages[imgMessages.length-1].id) {
+  const imgMessages = messageContent.value.filter(
+    (item) => item.type === "image"
+  );
+  if (id === imgMessages[imgMessages.length - 1].id) {
     messageContainer.value.scrollTop = messageContainer.value.scrollHeight;
   }
 };
