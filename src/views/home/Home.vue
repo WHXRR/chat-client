@@ -50,13 +50,12 @@ socket.on("message", (data) => {
       break;
   }
 });
-
 // 发送消息
 const date = new Date();
 const send = () => {
   socket.emit("send", {
     message: message.value,
-    type: 'text',
+    type: "text",
     ...store.user,
     sender_id: store.user.id,
     create_time: date.toLocaleString(),
@@ -90,12 +89,20 @@ socket.on("back", (msg) => {
     messageContainer.value.scrollTop = messageContainer.value.scrollHeight;
   });
 });
+
+// 最后一张图懒加载时，将滚动条滚至最底部
+const loadedImg = (id) => {
+  const imgMessages = messageContent.value.filter(item => item.type === 'image')
+  if (id === imgMessages[imgMessages.length-1].id) {
+    messageContainer.value.scrollTop = messageContainer.value.scrollHeight;
+  }
+};
 </script>
 <template>
   <div class="chat-container">
     <ChatHeader :allPeoples="allPeoples" />
     <div class="main" ref="messageContainer">
-      <ChatMain :messageContent="messageContent" />
+      <ChatMain :messageContent="messageContent" @loadedImg="loadedImg" />
     </div>
     <ChatFooter
       v-model="message"

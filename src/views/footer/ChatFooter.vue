@@ -6,7 +6,6 @@ import { uploadStore } from "@/store/upload";
 import useClickArea from "@/hooks/useClickArea";
 import Emoji from "@/components/Emoji.vue";
 import api from "@/api";
-import axios from "axios";
 
 const store = useStore();
 const useUploadStore = uploadStore();

@@ -3,6 +3,7 @@ import { useStore } from "@/store/user";
 import { uploadStore } from "@/store/upload";
 import UploadLoading from "@/components/UploadLoading.vue";
 
+const emit = defineEmits(["loadedImg"]);
 const date = new Date();
 const store = useStore();
 const useUploadStore = uploadStore();
@@ -12,6 +13,10 @@ const props = defineProps({
 
 const downLoadFile = (url) => {
   window.open(url, "_black");
+};
+
+const handleLoadImg = (id) => {
+  emit("loadedImg", id);
 };
 </script>
 <template>
@@ -36,9 +41,11 @@ const downLoadFile = (url) => {
             <el-image
               class="img-content"
               :src="item.message"
-              fit="contain"
-              loading="lazy"
               :preview-src-list="[item.message]"
+              @load="handleLoadImg(item.id)"
+              fit="contain"
+              lazy
+              hide-on-click-modal
             >
               <template #placeholder>
                 <div>
@@ -136,7 +143,7 @@ const downLoadFile = (url) => {
     .msg-content {
       padding: 5px 7px;
       margin-top: 5px;
-      border-radius: 5px;
+      border-radius: 3px;
       color: #21252b;
       font-size: 14px;
       word-break: break-all;
@@ -144,6 +151,7 @@ const downLoadFile = (url) => {
     }
     .img-content {
       max-width: 40vw;
+      border-radius: 5px;
     }
     .file-content {
       cursor: pointer;
