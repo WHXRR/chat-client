@@ -6,6 +6,7 @@ import { uploadStore } from "@/store/upload";
 import useClickArea from "@/hooks/useClickArea";
 import Emoji from "@/components/Emoji.vue";
 import api from "@/api";
+import axios from "axios";
 
 const store = useStore();
 const useUploadStore = uploadStore();
@@ -49,12 +50,21 @@ window.addEventListener("click", (e) => {
 });
 
 const uploadFile = (file) => {
-  const formData = new FormData();
-  formData.append("file", file.file);
   const name = file.file.name;
   const type = file.file.type.includes("image") ? "image" : "file";
+  // 设置取消请求
+  const controller = new AbortController();
+  useUploadStore.cancelTokens[name] = controller;
+  // const cancelToken = new axios.CancelToken((cancel) => {
+  //   useUploadStore.cancelTokens[name] = cancel;
+  // });
+  // 设置文件对象
+  const formData = new FormData();
+  formData.append("file", file.file);
   api
     .uploadFiles(formData, {
+      // cancelToken,
+      signal: controller.signal,
       onUploadProgress: (progressEvent) => {
         const percentage = Math.round(
           (progressEvent.loaded * 100) / progressEvent.total
@@ -62,6 +72,7 @@ const uploadFile = (file) => {
         useUploadStore.uploadObj[name] = {
           type,
           percentage,
+          name,
         };
       },
     })
@@ -100,10 +111,11 @@ const handleSuccess = (res, file) => {
     });
   }
 };
-const handleError = (error) => {
+const handleError = (error, file) => {
+  const message = error.name === "CanceledError" ? `取消上传 ${file.file.name}` : error
   ElNotification({
     title: "Error",
-    message: error,
+    message,
     type: "error",
   });
 };

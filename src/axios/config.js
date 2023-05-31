@@ -76,8 +76,10 @@ function myAxios(axiosConfig) {
   })
   service.interceptors.request.use(
     config => {
-      removePendingKey(config)
-      addPendingKey(config)
+      if (!axiosConfig.cancelResponse) {
+        removePendingKey(config)
+        addPendingKey(config)
+      }
       if (axiosConfig?.loading) {
         sysStore.btnLoading = true
       }

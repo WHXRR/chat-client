@@ -6,5 +6,6 @@ export const uploadFiles = (data, config) => api({
   data,
   loading: true,
   tips: true,
+  cancelResponse: true,
   config
 })

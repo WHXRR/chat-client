@@ -10,9 +10,9 @@ const props = defineProps({
   messageContent: Array,
 });
 
-const downLoadFile = url => {
-  window.open(url, '_black')
-}
+const downLoadFile = (url) => {
+  window.open(url, "_black");
+};
 </script>
 <template>
   <div class="chat-main">
@@ -62,7 +62,7 @@ const downLoadFile = url => {
     <!-- 展示上传文件的loading -->
     <TransitionGroup name="list" tag="div">
       <div
-        class="msg-item my"
+        class="msg-item my upload-item"
         v-for="(item, index) in useUploadStore.uploadArrs"
         :key="index"
       >
@@ -73,7 +73,11 @@ const downLoadFile = url => {
             <span class="time">{{ date.toLocaleString() }}</span>
           </div>
           <div>
-            <UploadLoading :type="item.type" :percentage="item.percentage" />
+            <UploadLoading
+              :type="item.type"
+              :percentage="item.percentage"
+              :file="item"
+            />
           </div>
         </div>
       </div>
@@ -150,6 +154,9 @@ const downLoadFile = url => {
       font-size: 14px;
       background-color: #3e4452;
     }
+  }
+  .upload-item {
+    margin-top: 20px;
   }
   .my {
     flex-direction: row-reverse;
