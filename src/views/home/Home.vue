@@ -6,11 +6,12 @@ import { ref, nextTick, provide } from "vue";
 import { useStore } from "@/store/user";
 import { io } from "socket.io-client";
 import { ElNotification } from "element-plus";
+import { socketURL } from "@/axios/base";
 
 const store = useStore();
 const message = ref("");
 
-const socket = io("ws://192.168.1.7:5432");
+const socket = io(socketURL);
 provide("socket", socket);
 // 连接成功
 socket.on("connect", () => {

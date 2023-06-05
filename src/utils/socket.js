@@ -1,6 +1,7 @@
 import { io } from "socket.io-client";
 
-const socket = io("ws://192.168.1.7:5432");
+const socket = io("ws://47.97.159.103:5432");
+// const socket = io("ws://192.168.1.7::5432");
 const socketConnectPromise = new Promise((resolve) => {
   socket.on("connect", () => {
     resolve(socket)
