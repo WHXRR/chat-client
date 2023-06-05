@@ -15,11 +15,19 @@ const socket = io(socketURL);
 provide("socket", socket);
 // 连接成功
 socket.on("connect", () => {
+  socket.emit("sendOnlinePeople", {
+    number: +1
+  })
   ElNotification({
     message: `欢迎${store.user.username}来到聊天室~`,
     type: "success",
   });
 });
+
+const allPeoples = ref(0);
+socket.on("backOnlinePeople", (data) => {
+  allPeoples.value = data
+})
 
 // 断开连接
 socket.on("disconnect", () => {
@@ -30,7 +38,6 @@ socket.on("disconnect", () => {
 });
 
 // 处理服务器发送的消息
-const allPeoples = ref(0);
 socket.on("message", (data) => {
   if (!data.status) {
     store.clearToken();
@@ -40,9 +47,6 @@ socket.on("message", (data) => {
     });
   }
   switch (data.type) {
-    case "getChatPeople":
-      allPeoples.value = data.data;
-      break;
     case "getMessages":
       messageContent.value = data.data;
       nextTick(() => {

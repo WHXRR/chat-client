@@ -50,6 +50,9 @@ const saveInfo = () => {
 const exit = () => {
   socket.disconnect();
   store.clearToken();
+  socket.emit("sendOnlinePeople", {
+    number: -1
+  })
 };
 </script>
 <template>
