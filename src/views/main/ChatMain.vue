@@ -28,7 +28,9 @@ const handleLoadImg = (id) => {
         v-for="(item, index) in messageContent"
         :key="index"
       >
-        <el-avatar class="avatar" :src="item.avatar" />
+        <el-avatar class="avatar" :src="item.avatar">
+          <el-icon :size="30"><Pear /></el-icon>
+        </el-avatar>
         <div class="msg-right">
           <div class="user-name">
             <span>{{ item.username }}</span>

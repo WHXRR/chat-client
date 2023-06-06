@@ -54,7 +54,12 @@ const exit = () => {
 </script>
 <template>
   <div>
-    <el-drawer v-model="visible" title="设置" direction="rtl">
+    <el-drawer
+      custom-class="system-drawer"
+      v-model="visible"
+      title="设置"
+      direction="rtl"
+    >
       <div class="info">
         <el-upload
           class="avatar-uploader"
@@ -67,7 +72,18 @@ const exit = () => {
             Authorization: store.token,
           }"
         >
-          <img v-if="user.avatar" :src="user.avatar" class="avatar" />
+          <el-image
+            v-if="user.avatar"
+            class="img-content"
+            :src="user.avatar"
+            fit="contain"
+          >
+            <template #error>
+              <div class="image-slot">
+                <el-icon :size="80"><Pear /></el-icon>
+              </div>
+            </template>
+          </el-image>
         </el-upload>
         <input class="username-ipt" type="text" v-model="user.username" />
         <el-button type="info" @click="saveInfo" :loading="sysStore.btnLoading"
@@ -84,6 +100,16 @@ const exit = () => {
   </div>
 </template>
 <style lang="scss" scoped>
+@media (max-width: 1024px) {
+  ::v-deep .system-drawer {
+    width: 60% !important;
+  }
+}
+@media (max-width: 767px) {
+  ::v-deep .system-drawer {
+    width: 80% !important;
+  }
+}
 .info {
   display: flex;
   flex-direction: column;
@@ -93,6 +119,9 @@ const exit = () => {
   .avatar-uploader {
     width: 140px;
     height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin: 0 auto;
     overflow: hidden;
     border-radius: 50%;

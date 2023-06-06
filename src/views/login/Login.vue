@@ -92,6 +92,7 @@ const login = async () => {
           登录
         </el-button>
       </div>
+      <div class="tips">未查询到的用户将自行进行注册后登录</div>
     </div>
   </div>
 </template>
@@ -102,9 +103,10 @@ const login = async () => {
   justify-content: center;
   height: 100vh;
   .login-box {
+    position: relative;
     width: 50%;
     max-width: 350px;
-    padding: 20px 30px;
+    padding: 40px 30px 60px 30px;
     border-radius: 10px;
     border: 2px solid #323842;
     box-shadow: -3px 3px 0px 0px #323842;
@@ -140,6 +142,13 @@ const login = async () => {
         );
         color: rgb(4, 4, 38);
       }
+    }
+    .tips {
+      position: absolute;
+      right: 30px;
+      bottom: 10px;
+      font-size: 12px;
+      color: #abb2bf;
     }
   }
 }
