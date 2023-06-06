@@ -1,6 +1,5 @@
-const baseURL = 'http://47.97.159.103:3000/'
-const socketURL = 'ws://47.97.159.103:5432'
-// const baseURL = 'http://192.168.1.7:3333/'
+const baseURL = import.meta.env.VITE_BASE_URL
+const socketURL = import.meta.env.VITE_SOCKET_URL
 
 export default baseURL
 export {
