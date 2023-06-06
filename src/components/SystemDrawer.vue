@@ -101,12 +101,12 @@ const exit = () => {
 </template>
 <style lang="scss" scoped>
 @media (max-width: 1024px) {
-  ::v-deep .system-drawer {
+  :deep(.system-drawer) {
     width: 60% !important;
   }
 }
 @media (max-width: 767px) {
-  ::v-deep .system-drawer {
+  :deep(.system-drawer) {
     width: 80% !important;
   }
 }

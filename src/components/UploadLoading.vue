@@ -71,8 +71,8 @@ const cancelUpload = () => {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 2;
-    ::v-deep .el-progress__text {
+    z-index: 2; 
+    :deep(.el-progress__text) {
       color: #fff;
     }
   }
