@@ -1,8 +1,9 @@
 <script setup>
-import { computed, nextTick, ref } from "vue";
+import { computed, nextTick, onMounted, ref } from "vue";
 import { useStore } from "@/store/user";
 import { ElNotification } from "element-plus";
 import { uploadStore } from "@/store/upload";
+import { throttle } from "@/utils/help";
 import useClickArea from "@/hooks/useClickArea";
 import Emoji from "@/components/Emoji.vue";
 import api from "@/api";
@@ -15,8 +16,20 @@ const props = defineProps({
 const emit = defineEmits(["send", "update:modelValue", "sendImage"]);
 const send = () => {
   if (!message.value) return;
+  if (message.value.length > 20) {
+    return ElNotification({
+      message: "充值成为会员后可解锁发消息无长度限制功能噢~",
+      type: "warning",
+    });
+  }
   emit("send");
 };
+const throttleSend = throttle(send, 2000, () => {
+  ElNotification({
+    message: "再刷屏就把你封了",
+    type: "error",
+  });
+});
 const message = computed({
   get: () => props.modelValue,
   set: (val) => {
@@ -38,6 +51,15 @@ const handleEmojiClick = (emoji) => {
     messageInputRef.value.setSelectionRange(cursorPos, cursorPos);
   });
 };
+// 修改输入框的enter事件
+onMounted(() => {
+  messageInputRef.value.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault(); // 阻止默认的换行行为
+      throttleSend();
+    }
+  });
+});
 
 window.addEventListener("click", (e) => {
   const clickArea = useClickArea("emoji-container", e.target);
@@ -84,11 +106,11 @@ const uploadFile = (file) => {
       handleError(err, file);
     });
 };
-const beforeAvatarUpload = (rawFile) => {
-  if (rawFile.size / 1024 / 1024 > 20) {
+const beforeFileUpload = (rawFile) => {
+  if (rawFile.size / 1024 / 1024 > 2) {
     ElNotification({
       title: "Warning",
-      message: "上传的内容不能超过20MB!",
+      message: "上传的内容不能超过2MB!",
       type: "warning",
     });
     return false;
@@ -111,7 +133,8 @@ const handleSuccess = (res, file) => {
   }
 };
 const handleError = (error, file) => {
-  const message = error.name === "CanceledError" ? `取消上传 ${file.file.name}` : error
+  const message =
+    error.name === "CanceledError" ? `取消上传 ${file.file.name}` : error;
   ElNotification({
     title: "Error",
     message,
@@ -135,9 +158,10 @@ const handleError = (error, file) => {
       <el-upload
         class="upload-file"
         name="file"
+        v-permission="store.user.identity"
         :on-success="handleSuccess"
         :on-error="handleError"
-        :before-upload="beforeAvatarUpload"
+        :before-upload="beforeFileUpload"
         :show-file-list="false"
         :http-request="uploadFile"
         :headers="{
@@ -153,9 +177,8 @@ const handleError = (error, file) => {
       class="send-ipt"
       placeholder="请输入..."
       v-model.trim="message"
-      @keyup.enter="send"
     ></textarea>
-    <button class="send-btn" @click="send">发送</button>
+    <button class="send-btn" @click="throttleSend">发送</button>
   </div>
 </template>
 <style lang="scss" scoped>

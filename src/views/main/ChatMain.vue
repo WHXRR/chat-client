@@ -39,7 +39,7 @@ const handleLoadImg = (id) => {
           <div v-if="item.type === 'text'" class="msg-content">
             {{ item.message }}
           </div>
-          <div v-else-if="item.type === 'image'">
+          <div v-else-if="item.type === 'image'" style="margin-top: 5px;">
             <el-image
               class="img-content"
               :src="item.message"

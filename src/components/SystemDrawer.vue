@@ -62,6 +62,7 @@ const exit = () => {
     >
       <div class="info">
         <el-upload
+          v-if="store.user.identity === 'root'"
           class="avatar-uploader"
           name="avatar"
           :action="`${baseURL}img`"
@@ -85,6 +86,18 @@ const exit = () => {
             </template>
           </el-image>
         </el-upload>
+        <el-image
+          v-else="user.avatar"
+          class="avatar-content"
+          :src="user.avatar"
+          fit="contain"
+        >
+          <template #error>
+            <div class="image-slot">
+              <el-icon :size="80"><Pear /></el-icon>
+            </div>
+          </template>
+        </el-image>
         <input class="username-ipt" type="text" v-model="user.username" />
         <el-button type="info" @click="saveInfo" :loading="sysStore.btnLoading"
           >保存</el-button
@@ -146,6 +159,11 @@ const exit = () => {
     outline: none;
     background-color: transparent;
   }
+}
+.avatar-content {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
 }
 .menu-item {
   cursor: pointer;

@@ -30,6 +30,15 @@ app.mount('#app')
 app.directive('focus', {
   mounted: (el) => el.focus(),
 })
+app.directive('permission', {
+  mounted: (el, binding) => {
+    if (binding.value === 'root') {
+      el.style.display = 'block'
+    } else {
+      el.style.display = 'none'
+    }
+  }
+})
 
 // 刷新时重新获取个人信息
 const store = useStore(pinia);
