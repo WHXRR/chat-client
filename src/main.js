@@ -35,7 +35,7 @@ app.directive('permission', {
     if (binding.value === 'root') {
       el.style.display = 'block'
     } else {
-      el.style.display = 'none'
+      el.parentNode.removeChild(el);
     }
   }
 })
