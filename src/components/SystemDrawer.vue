@@ -50,6 +50,8 @@ const saveInfo = () => {
 const exit = () => {
   socket.disconnect();
   store.clearToken();
+  // 主动断开连接时需向服务端发送消息，将该用户对应的socket对象设为null
+  socket.emit("disconnectChat", { id: store.user.id });
 };
 </script>
 <template>

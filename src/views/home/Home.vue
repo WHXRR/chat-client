@@ -15,19 +15,31 @@ const socket = io(socketURL);
 provide("socket", socket);
 // 连接成功
 socket.on("connect", () => {
+  // 更新在线人数
   socket.emit("sendOnlinePeople", {
-    number: +1
-  })
+    number: +1,
+    id: store.user.id
+  });
+
   ElNotification({
     message: `欢迎${store.user.username}来到聊天室~`,
     type: "success",
   });
 });
 
+socket.on("multipleLogins", () => {
+  socket.disconnect();
+  store.clearToken()
+  ElNotification({
+    message: `账号在别处登录，你被挤啦`,
+    type: "warning",
+  });
+});
+
 const allPeoples = ref(0);
 socket.on("backOnlinePeople", (data) => {
-  allPeoples.value = data
-})
+  allPeoples.value = data;
+});
 
 // 断开连接
 socket.on("disconnect", () => {
