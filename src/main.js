@@ -30,9 +30,12 @@ app.mount('#app')
 app.directive('focus', {
   mounted: (el) => el.focus(),
 })
+
+const store = useStore(pinia);
 app.directive('permission', {
   mounted: (el, binding) => {
-    if (binding.value === 'root') {
+    const userPermission = store.user.identity
+    if (binding.value.includes(userPermission)) {
       el.style.display = 'block'
     } else {
       el.parentNode.removeChild(el);
@@ -41,7 +44,6 @@ app.directive('permission', {
 })
 
 // 刷新时重新获取个人信息
-const store = useStore(pinia);
 if (store.token) {
   store.getUserInfo()
 }

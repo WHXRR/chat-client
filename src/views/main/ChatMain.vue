@@ -25,10 +25,8 @@ const clickName = (name) => {
   document.querySelector(".send-ipt").focus();
 };
 
-const rootPermission = (id) => {
-  api.grantPermissions({ id }).then((res) => {
-    console.log(res);
-  });
+const rootPermission = (id, permission) => {
+  api.grantPermissions({ id, permission })
 };
 </script>
 <template>
@@ -53,12 +51,18 @@ const rootPermission = (id) => {
           <div class="user-menu">
             <div
               class="user-menu-item"
-              v-permission="store.user.identity"
-              @click="rootPermission(item.sender_id)"
+              v-permission="['root', 'admin']"
+              @click="rootPermission(item.sender_id, 'admin')"
             >
-              赋予root权限
+              赋予管理员权限
             </div>
-            <div class="user-menu-item">暂未开放</div>
+            <div
+              class="user-menu-item"
+              v-permission="['root']"
+              @click="rootPermission(item.sender_id, 'tourist')"
+            >
+              转为普通群众
+            </div>
             <div class="user-menu-item">暂未开放</div>
           </div>
         </el-popover>

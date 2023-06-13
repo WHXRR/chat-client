@@ -47,6 +47,10 @@ const saveInfo = () => {
     });
 };
 
+const clearMessages = () => {
+  api.clearMessages()
+};
+
 const exit = () => {
   socket.disconnect();
   store.clearToken();
@@ -64,7 +68,7 @@ const exit = () => {
     >
       <div class="info">
         <el-upload
-          v-if="store.user.identity === 'root'"
+          v-if="['root', 'admin'].includes(store.user.identity)"
           class="avatar-uploader"
           name="avatar"
           :action="`${baseURL}img`"
@@ -106,6 +110,12 @@ const exit = () => {
         >
       </div>
       <div class="menu">
+        <div v-permission="['root']">
+          <div class="menu-item" @click="clearMessages">
+            <div>清空聊天记录</div>
+            <el-icon :size="20"><SwitchButton /></el-icon>
+          </div>
+        </div>
         <div class="menu-item" @click="exit">
           <div>退出</div>
           <el-icon :size="20"><SwitchButton /></el-icon>

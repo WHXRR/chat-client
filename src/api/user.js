@@ -35,3 +35,10 @@ export const grantPermissions = (data) => api({
   loading: true,
   tips: true
 })
+
+export const clearMessages = () => api({
+  url: '/clearMessages',
+  method: 'post',
+  loading: true,
+  tips: true
+})
