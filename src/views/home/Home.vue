@@ -7,6 +7,7 @@ import { useStore } from "@/store/user";
 import { io } from "socket.io-client";
 import { ElNotification } from "element-plus";
 import { socketURL } from "@/axios/base";
+import { debounce } from "@/utils/help";
 
 const store = useStore();
 const message = ref("");
@@ -18,7 +19,7 @@ socket.on("connect", () => {
   // 更新在线人数
   socket.emit("sendOnlinePeople", {
     number: +1,
-    id: store.user.id
+    id: store.user.id,
   });
 
   ElNotification({
@@ -29,7 +30,7 @@ socket.on("connect", () => {
 
 socket.on("multipleLogins", () => {
   socket.disconnect();
-  store.clearToken()
+  store.clearToken();
   ElNotification({
     message: `账号在别处登录，你被挤啦`,
     type: "warning",
@@ -102,6 +103,15 @@ const messageContainer = ref(null);
 const messageContent = ref([]);
 socket.on("back", (msg) => {
   messageContent.value.push(msg);
+  // 如果10秒内没消息，之后有消息就发送浏览器通知
+  debounce(browserNotification, 10000);
+  nextTick(() => {
+    messageContainer.value.scrollTop = messageContainer.value.scrollHeight;
+  });
+});
+
+// 添加浏览器通知
+const browserNotification = () => {
   if ("Notification" in window) {
     const notification = new Notification("新消息", {
       body: "你有一条新消息",
@@ -117,10 +127,7 @@ socket.on("back", (msg) => {
       });
     }
   }
-  nextTick(() => {
-    messageContainer.value.scrollTop = messageContainer.value.scrollHeight;
-  });
-});
+};
 
 // 最后一张图懒加载时，将滚动条滚至最底部
 const loadedImg = (id) => {

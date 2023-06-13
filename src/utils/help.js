@@ -1,23 +1,39 @@
 function throttle(func, delay, cb) {
-  let timeoutId;
+  let timeoutId
 
   return function () {
     // 如果之前已经设置了定时器，则直接返回
     if (timeoutId) {
       cb && cb()
-      return;
+      return
     }
 
     // 调用原始函数
-    func.apply(this, arguments);
+    func.apply(this, arguments)
 
     // 设置定时器，在延迟时间结束后清除定时器
     timeoutId = setTimeout(function () {
-      timeoutId = null;
-    }, delay);
-  };
+      timeoutId = null
+    }, delay)
+  }
+}
+
+let timer = null
+let isFirstCall = true
+function debounce(fn, delay) {
+  console.log(isFirstCall);
+  if (isFirstCall) {
+    fn()
+    isFirstCall = false
+    return
+  }
+  if (timer) clearTimeout(timer)
+  timer = setTimeout(() => {
+    isFirstCall = true
+  }, delay)
 }
 
 export {
-  throttle
+  throttle,
+  debounce
 }
