@@ -2,8 +2,9 @@
 import { useStore } from "@/store/user";
 import { uploadStore } from "@/store/upload";
 import UploadLoading from "@/components/UploadLoading.vue";
+import api from "@/api";
 
-const emit = defineEmits(["loadedImg"]);
+const emit = defineEmits(["loadedImg", "cuePeople"]);
 const date = new Date();
 const store = useStore();
 const useUploadStore = uploadStore();
@@ -18,6 +19,17 @@ const downLoadFile = (url) => {
 const handleLoadImg = (id) => {
   emit("loadedImg", id);
 };
+
+const clickName = (name) => {
+  emit("cuePeople", name);
+  document.querySelector(".send-ipt").focus();
+};
+
+const rootPermission = (id) => {
+  api.grantPermissions({ id }).then((res) => {
+    console.log(res);
+  });
+};
 </script>
 <template>
   <div class="chat-main">
@@ -28,18 +40,37 @@ const handleLoadImg = (id) => {
         v-for="(item, index) in messageContent"
         :key="index"
       >
-        <el-avatar class="avatar" :src="item.avatar">
-          <el-icon :size="30"><Pear /></el-icon>
-        </el-avatar>
+        <el-popover
+          placement="right"
+          trigger="click"
+          popper-class="menu-popper"
+        >
+          <template #reference>
+            <el-avatar class="avatar" :src="item.avatar">
+              <el-icon :size="30"><Pear /></el-icon>
+            </el-avatar>
+          </template>
+          <div class="user-menu">
+            <div
+              class="user-menu-item"
+              v-permission="store.user.identity"
+              @click="rootPermission(item.sender_id)"
+            >
+              赋予root权限
+            </div>
+            <div class="user-menu-item">暂未开放</div>
+            <div class="user-menu-item">暂未开放</div>
+          </div>
+        </el-popover>
         <div class="msg-right">
-          <div class="user-name">
+          <div class="user-name" @click="clickName(item.username)">
             <span>{{ item.username }}</span>
             <span class="time">{{ item.create_time }}</span>
           </div>
           <div v-if="item.type === 'text'" class="msg-content">
             {{ item.message }}
           </div>
-          <div v-else-if="item.type === 'image'" style="margin-top: 5px;">
+          <div v-else-if="item.type === 'image'" style="margin-top: 5px">
             <el-image
               class="img-content"
               :src="item.message"
@@ -119,6 +150,7 @@ const handleLoadImg = (id) => {
     .avatar {
       flex-shrink: 0;
       background-color: transparent;
+      cursor: pointer;
     }
     .msg-right {
       display: flex;
@@ -129,6 +161,7 @@ const handleLoadImg = (id) => {
     .user-name {
       display: flex;
       font-size: 15px;
+      cursor: pointer;
     }
     .time {
       color: #3e4452;

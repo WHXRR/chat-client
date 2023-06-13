@@ -27,3 +27,11 @@ export const updateUserInfo = (data) => api({
   loading: true,
   tips: true
 })
+
+export const grantPermissions = (data) => api({
+  url: '/grantPermissions',
+  method: 'post',
+  data,
+  loading: true,
+  tips: true
+})

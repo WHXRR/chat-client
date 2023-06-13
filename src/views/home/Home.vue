@@ -170,12 +170,20 @@ const scrollToTop = (e) => {
     });
   }
 };
+
+const cuePeople = name => {
+  message.value = message.value + `@${name} `
+}
 </script>
 <template>
   <div class="chat-container">
     <ChatHeader :allPeoples="allPeoples" />
     <div class="main" ref="messageContainer" @scroll="scrollToTop">
-      <ChatMain :messageContent="messageContent" @loadedImg="loadedImg" />
+      <ChatMain
+        :messageContent="messageContent"
+        @loadedImg="loadedImg"
+        @cuePeople="cuePeople"
+      />
     </div>
     <ChatFooter
       v-model="message"

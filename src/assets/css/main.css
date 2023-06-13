@@ -24,3 +24,18 @@
 ::-webkit-scrollbar-thumb:horizontal:hover {
   background-color: #3e4452;
 }
+
+.menu-popper {
+  padding: 0 !important;
+}
+.user-menu-item {
+  padding: 6px;
+  color: #fff;
+  font-size: 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: all .3s;
+}
+.user-menu-item:hover {
+  background-color: #909399;
+}
