@@ -57,7 +57,7 @@ const exit = () => {
 <template>
   <div>
     <el-drawer
-      custom-class="system-drawer"
+      class="system-drawer"
       v-model="visible"
       title="设置"
       direction="rtl"

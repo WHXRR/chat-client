@@ -69,7 +69,7 @@ window.addEventListener("click", (e) => {
     showEmoji.value = false;
   }
 });
-
+ 
 const uploadFile = (file) => {
   const name = file.file.name;
   const type = file.file.type.includes("image") ? "image" : "file";

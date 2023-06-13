@@ -107,9 +107,6 @@ const handleLoadImg = (id) => {
     opacity: 0;
     transform: translateX(30px);
   }
-
-  /* 确保将离开的元素从布局流中删除
-  以便能够正确地计算移动的动画。 */
   .list-leave-active {
     position: absolute;
   }
@@ -152,7 +149,7 @@ const handleLoadImg = (id) => {
       background-color: #fff;
     }
     .img-content {
-      max-width: 40vw;
+      max-width: 20vw;
       border-radius: 5px;
     }
     .file-content {

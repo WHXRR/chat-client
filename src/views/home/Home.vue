@@ -32,7 +32,7 @@ socket.on("multipleLogins", () => {
   socket.disconnect();
   store.clearToken();
   ElNotification({
-    message: `账号在别处登录，你被挤啦`,
+    message: `账号在别处登录`,
     type: "warning",
   });
 });
@@ -50,20 +50,32 @@ socket.on("disconnect", () => {
   });
 });
 
-// 处理服务器发送的消息
-socket.on("message", (data) => {
-  if (!data.status) {
+// 处理服务器发送的历史聊天记录
+const messagesTotal = ref(0);
+socket.on("message", ({ type, status, data }) => {
+  if (!status) {
     store.clearToken();
     return ElNotification({
-      message: data.data,
+      message: data,
       type: "error",
     });
   }
-  switch (data.type) {
-    case "getMessages":
-      messageContent.value = data.data;
+  switch (type) {
+    case "getFirstMessages":
+      const messages1 = data.results.reverse();
+      messagesTotal.value = data.total;
+      messageContent.value = [...messages1, ...messageContent.value];
       nextTick(() => {
         messageContainer.value.scrollTop = messageContainer.value.scrollHeight;
+      });
+      break;
+    case "getMoreMessages":
+      const messages2 = data.results.reverse();
+      const oldScrollTop = messageContainer.value.scrollHeight;
+      messageContent.value = [...messages2, ...messageContent.value];
+      nextTick(() => {
+        const newScrollTop = messageContainer.value.scrollHeight;
+        messageContainer.value.scrollTop = newScrollTop - oldScrollTop;
       });
       break;
   }
@@ -101,10 +113,17 @@ const sendFile = (data) => {
 // 接收消息
 const messageContainer = ref(null);
 const messageContent = ref([]);
-socket.on("back", (msg) => {
-  messageContent.value.push(msg);
+socket.on("back", ({ message, total }) => {
+  messageContent.value.push(message);
+  messagesTotal.value = total;
   // 如果10秒内没消息，之后有消息就发送浏览器通知
   debounce(browserNotification, 10000);
+  // 当滚动条不是在最底部时，有新消息不滚动到最底部
+  if (
+    messageContainer.value.scrollTop + messageContainer.value.clientHeight <
+    messageContainer.value.scrollHeight
+  )
+    return;
   nextTick(() => {
     messageContainer.value.scrollTop = messageContainer.value.scrollHeight;
   });
@@ -138,11 +157,24 @@ const loadedImg = (id) => {
     messageContainer.value.scrollTop = messageContainer.value.scrollHeight;
   }
 };
+
+const currentPage = ref(1);
+const scrollToTop = (e) => {
+  if (
+    e.target.scrollTop === 0 &&
+    messageContent.value.length !== messagesTotal.value
+  ) {
+    currentPage.value = currentPage.value + 1;
+    socket.emit("loadMessage", {
+      currentPage: currentPage.value,
+    });
+  }
+};
 </script>
 <template>
   <div class="chat-container">
     <ChatHeader :allPeoples="allPeoples" />
-    <div class="main" ref="messageContainer">
+    <div class="main" ref="messageContainer" @scroll="scrollToTop">
       <ChatMain :messageContent="messageContent" @loadedImg="loadedImg" />
     </div>
     <ChatFooter

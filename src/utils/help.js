@@ -21,7 +21,6 @@ function throttle(func, delay, cb) {
 let timer = null
 let isFirstCall = true
 function debounce(fn, delay) {
-  console.log(isFirstCall);
   if (isFirstCall) {
     fn()
     isFirstCall = false
