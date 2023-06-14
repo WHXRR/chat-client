@@ -237,9 +237,11 @@ const kickOutGroupChat = (id) => {
     .msg-right {
       padding-left: 0;
       padding-right: 10px;
+      align-items: flex-end;
     }
     .user-name {
-      display: none;
+      /* display: none; */
+      flex-direction: row-reverse;
     }
   }
   .tag {

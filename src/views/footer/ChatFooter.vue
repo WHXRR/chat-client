@@ -16,7 +16,7 @@ const props = defineProps({
 const emit = defineEmits(["send", "update:modelValue", "sendImage"]);
 const send = () => {
   if (!message.value) return;
-  if (message.value.length > 50) {
+  if (store.user.identity === 'tourist' && message.value.length > 50) {
     return ElNotification({
       message: "充值成为会员后可解锁发消息无长度限制功能噢~",
       type: "warning",
