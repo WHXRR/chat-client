@@ -50,6 +50,7 @@ const kickOutGroupChat = (id) => {
           >
             <el-icon :size="30"><Pear /></el-icon>
           </el-avatar>
+          <!-- 用户菜单 -->
           <el-popover
             v-else
             placement="right"
@@ -65,7 +66,7 @@ const kickOutGroupChat = (id) => {
               <div v-if="item.identity !== 'admin'">
                 <div
                   class="user-menu-item"
-                  v-permission="['root', 'admin']"
+                  v-permission="['root']"
                   @click="rootPermission(item.sender_id, 'admin')"
                 >
                   赋予管理员权限
@@ -90,6 +91,7 @@ const kickOutGroupChat = (id) => {
               <div class="user-menu-item">暂未开放</div>
             </div>
           </el-popover>
+          <!-- 标签 -->
           <div class="tag" v-if="item.identity === 'admin'">管理员</div>
           <div class="tag" v-if="item.identity === 'root'">root</div>
         </div>

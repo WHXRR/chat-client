@@ -35,6 +35,7 @@ const beforeAvatarUpload = (rawFile) => {
 };
 
 const saveInfo = () => {
+  if (!store.user.username) return 
   api
     .updateUserInfo({
       username: store.user.username,
