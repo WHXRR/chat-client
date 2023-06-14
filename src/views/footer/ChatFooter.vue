@@ -24,11 +24,17 @@ const send = () => {
   }
   emit("send");
 };
+let warningNum = 0;
 const throttleSend = throttle(send, 2000, () => {
   ElNotification({
     message: "再刷屏就把你封了",
     type: "error",
   });
+  warningNum++;
+  if (warningNum >= 6) {
+    warningNum = 0;
+    store.clearToken();
+  }
 });
 const message = computed({
   get: () => props.modelValue,
@@ -118,6 +124,7 @@ const beforeFileUpload = (rawFile) => {
   return true;
 };
 const handleSuccess = (res, file) => {
+  if (!res.status) return
   if (file.file.type.includes("image/")) {
     return emit("sendImage", {
       fileName: file.file.name,
