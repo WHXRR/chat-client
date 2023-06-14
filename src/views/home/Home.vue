@@ -105,7 +105,7 @@ const sendFile = (data) => {
 };
 
 // 接收消息
-const messageContainer = ref(null);
+const messageContainer = ref({});
 const messageContent = ref([]);
 socket.on("back", ({ message, total }) => {
   messageContent.value.push(message);
@@ -115,11 +115,12 @@ socket.on("back", ({ message, total }) => {
   // 当滚动条不是在最底部时，有新消息不滚动到最底部
   if (
     messageContainer.value.scrollTop + messageContainer.value.clientHeight <
-    messageContainer.value.scrollHeight
+    messageContainer.value.scrollHeight - 100
   )
     return;
   nextTick(() => {
-    messageContainer.value.scrollTop = messageContainer.value.scrollHeight;
+    messageContainer.value.scrollTop =
+      messageContainer.value.scrollHeight - messageContainer.value.clientHeight;
   });
 });
 
