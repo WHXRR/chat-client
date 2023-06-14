@@ -42,56 +42,63 @@ const kickOutGroupChat = (id) => {
         v-for="(item, index) in messageContent"
         :key="index"
       >
-        <el-avatar
-          class="avatar"
-          :src="item.avatar"
-          v-if="item.sender_id === store.user.id"
-        >
-          <el-icon :size="30"><Pear /></el-icon>
-        </el-avatar>
-        <el-popover
-          v-else
-          placement="right"
-          trigger="click"
-          popper-class="menu-popper"
-        >
-          <template #reference>
-            <el-avatar class="avatar" :src="item.avatar">
-              <el-icon :size="30"><Pear /></el-icon>
-            </el-avatar>
-          </template>
-          <div class="user-menu">
-            <div v-if="item.identity !== 'admin'">
+        <div>
+          <el-avatar
+            class="avatar"
+            :src="item.avatar"
+            v-if="item.sender_id === store.user.id"
+          >
+            <el-icon :size="30"><Pear /></el-icon>
+          </el-avatar>
+          <el-popover
+            v-else
+            placement="right"
+            trigger="click"
+            popper-class="menu-popper"
+          >
+            <template #reference>
+              <el-avatar class="avatar" :src="item.avatar">
+                <el-icon :size="30"><Pear /></el-icon>
+              </el-avatar>
+            </template>
+            <div class="user-menu">
+              <div v-if="item.identity !== 'admin'">
+                <div
+                  class="user-menu-item"
+                  v-permission="['root', 'admin']"
+                  @click="rootPermission(item.sender_id, 'admin')"
+                >
+                  赋予管理员权限
+                </div>
+              </div>
+              <div v-if="item.identity !== 'tourist'">
+                <div
+                  class="user-menu-item"
+                  v-permission="['root']"
+                  @click="rootPermission(item.sender_id, 'tourist')"
+                >
+                  转为普通群众
+                </div>
+              </div>
               <div
                 class="user-menu-item"
                 v-permission="['root', 'admin']"
-                @click="rootPermission(item.sender_id, 'admin')"
+                @click="kickOutGroupChat(item.sender_id, item.username)"
               >
-                赋予管理员权限
+                踢出群聊
               </div>
+              <div class="user-menu-item">暂未开放</div>
             </div>
-            <div v-if="item.identity !== 'tourist'">
-              <div
-                class="user-menu-item"
-                v-permission="['root']"
-                @click="rootPermission(item.sender_id, 'tourist')"
-              >
-                转为普通群众
-              </div>
-            </div>
-            <div
-              class="user-menu-item"
-              v-permission="['root', 'admin']"
-              @click="kickOutGroupChat(item.sender_id, item.username)"
-            >
-              踢出群聊
-            </div>
-            <div class="user-menu-item">暂未开放</div>
-          </div>
-        </el-popover>
+          </el-popover>
+          <div class="tag" v-if="item.identity === 'admin'">管理员</div>
+          <div class="tag" v-if="item.identity === 'root'">root</div>
+        </div>
         <div class="msg-right">
           <div class="user-name" @click="clickName(item.username)">
-            <span>{{ item.username }}</span>
+            <span
+              :class="['root'].includes(item.identity) ? 'changing-text' : ''"
+              >{{ item.username }}</span
+            >
             <span class="time">{{ item.create_time }}</span>
           </div>
           <div v-if="item.type === 'text'" class="msg-content">
@@ -234,6 +241,15 @@ const kickOutGroupChat = (id) => {
     .user-name {
       display: none;
     }
+  }
+  .tag {
+    padding: 2px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    background-color: #909399;
+    transform: scale(0.8);
   }
 }
 </style>
