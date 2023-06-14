@@ -1,5 +1,6 @@
 
 import pinia from '@/store'
+import api from '@/api'
 import { useStore } from "@/store/user";
 import { createRouter, createWebHistory } from 'vue-router';
 import routes from './routes'
@@ -15,12 +16,18 @@ export function setupRouter(app) {
   app.use(router);
 }
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const store = useStore(pinia);
   if (!store.token && to.name !== 'Login') {
     next({ name: 'Login' })
   } else if (store.token && to.name === 'Login') {
     next({ name: 'Home' })
+  } else if (store.token && to.name !== 'Login') {
+    if (!store.user.id) {
+      let res = await api.getUserInfo()
+      store.user = { ...res.data }
+    }
+    next()
   } else {
     next()
   }

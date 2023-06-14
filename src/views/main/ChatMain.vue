@@ -245,10 +245,11 @@ const kickOutGroupChat = (id) => {
   .tag {
     padding: 2px;
     border-radius: 3px;
+    color: #fff;
     font-size: 12px;
     font-weight: bold;
     text-align: center;
-    background-color: #909399;
+    background-color: #ee7f65;
     transform: scale(0.8);
   }
 }

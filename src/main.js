@@ -44,6 +44,6 @@ app.directive('permission', {
 })
 
 // 刷新时重新获取个人信息
-if (store.token) {
-  store.getUserInfo()
-}
+// if (store.token) {
+//   store.getUserInfo()
+// }
