@@ -16,7 +16,7 @@ const socket = io(socketURL);
 provide("socket", socket);
 // 连接成功
 socket.on("connect", () => {
-  // 更新在线人数
+  // 通知服务器更新在线人数
   socket.emit("sendOnlinePeople", {
     number: +1,
     id: store.user.id,
@@ -28,27 +28,21 @@ socket.on("connect", () => {
   });
 });
 
-socket.on("multipleLogins", () => {
-  socket.disconnect();
-  store.clearToken();
-  ElNotification({
-    message: `账号在别处登录`,
-    type: "warning",
-  });
-});
-
+// 更新客户端在线人数
 const allPeoples = ref(0);
 socket.on("backOnlinePeople", (data) => {
   allPeoples.value = data;
 });
 
-// 断开连接
-socket.on("disconnect", () => {
-  ElNotification({
-    message: "退出成功",
-    type: "success",
-  });
-});
+// 账号在别处登录
+// socket.on("multipleLogins", () => {
+//   socket.disconnect();
+//   store.clearToken();
+//   ElNotification({
+//     message: `账号在别处登录`,
+//     type: "warning",
+//   });
+// });
 
 // 处理服务器发送的历史聊天记录
 const messagesTotal = ref(0);
@@ -129,6 +123,24 @@ socket.on("back", ({ message, total }) => {
   });
 });
 
+// 被踢出群聊
+socket.on("kickOut", ({ username }) => {
+  socket.disconnect();
+  store.clearToken();
+  ElNotification({
+    message: `你已被管理员${username}踢出群聊`,
+    type: "warning",
+  });
+});
+
+// 断开连接
+socket.on("disconnect", () => {
+  ElNotification({
+    message: "退出成功",
+    type: "success",
+  });
+});
+
 // 添加浏览器通知
 const browserNotification = () => {
   if ("Notification" in window) {
@@ -171,9 +183,13 @@ const scrollToTop = (e) => {
   }
 };
 
-const cuePeople = name => {
-  message.value = message.value + `@${name} `
-}
+const cuePeople = (name) => {
+  message.value = message.value + `@${name} `;
+};
+
+const kickOutGroupChat = (id) => {
+  socket.emit("kickOutGroupChat", { id, username: store.user.username });
+};
 </script>
 <template>
   <div class="chat-container">
@@ -183,6 +199,7 @@ const cuePeople = name => {
         :messageContent="messageContent"
         @loadedImg="loadedImg"
         @cuePeople="cuePeople"
+        @kickOutGroupChat="kickOutGroupChat"
       />
     </div>
     <ChatFooter

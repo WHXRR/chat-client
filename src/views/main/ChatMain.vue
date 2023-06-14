@@ -4,7 +4,7 @@ import { uploadStore } from "@/store/upload";
 import UploadLoading from "@/components/UploadLoading.vue";
 import api from "@/api";
 
-const emit = defineEmits(["loadedImg", "cuePeople"]);
+const emit = defineEmits(["loadedImg", "cuePeople", "kickOutGroupChat"]);
 const date = new Date();
 const store = useStore();
 const useUploadStore = uploadStore();
@@ -26,7 +26,11 @@ const clickName = (name) => {
 };
 
 const rootPermission = (id, permission) => {
-  api.grantPermissions({ id, permission })
+  api.grantPermissions({ id, permission });
+};
+
+const kickOutGroupChat = (id) => {
+  emit("kickOutGroupChat", id);
 };
 </script>
 <template>
@@ -38,7 +42,15 @@ const rootPermission = (id, permission) => {
         v-for="(item, index) in messageContent"
         :key="index"
       >
+        <el-avatar
+          class="avatar"
+          :src="item.avatar"
+          v-if="item.sender_id === store.user.id"
+        >
+          <el-icon :size="30"><Pear /></el-icon>
+        </el-avatar>
         <el-popover
+          v-else
           placement="right"
           trigger="click"
           popper-class="menu-popper"
@@ -49,19 +61,30 @@ const rootPermission = (id, permission) => {
             </el-avatar>
           </template>
           <div class="user-menu">
-            <div
-              class="user-menu-item"
-              v-permission="['root', 'admin']"
-              @click="rootPermission(item.sender_id, 'admin')"
-            >
-              赋予管理员权限
+            <div v-if="item.identity !== 'admin'">
+              <div
+                class="user-menu-item"
+                v-permission="['root', 'admin']"
+                @click="rootPermission(item.sender_id, 'admin')"
+              >
+                赋予管理员权限
+              </div>
+            </div>
+            <div v-if="item.identity !== 'tourist'">
+              <div
+                class="user-menu-item"
+                v-permission="['root']"
+                @click="rootPermission(item.sender_id, 'tourist')"
+              >
+                转为普通群众
+              </div>
             </div>
             <div
               class="user-menu-item"
-              v-permission="['root']"
-              @click="rootPermission(item.sender_id, 'tourist')"
+              v-permission="['root', 'admin']"
+              @click="kickOutGroupChat(item.sender_id, item.username)"
             >
-              转为普通群众
+              踢出群聊
             </div>
             <div class="user-menu-item">暂未开放</div>
           </div>
