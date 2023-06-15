@@ -35,14 +35,14 @@ socket.on("backOnlinePeople", (data) => {
 });
 
 // 账号在别处登录
-// socket.on("multipleLogins", () => {
-//   socket.disconnect();
-//   store.clearToken();
-//   ElNotification({
-//     message: `账号在别处登录`,
-//     type: "warning",
-//   });
-// });
+socket.on("multipleLogins", () => {
+  socket.disconnect();
+  store.clearToken();
+  ElNotification({
+    message: `账号在别处登录`,
+    type: "warning",
+  });
+});
 
 // 处理服务器发送的历史聊天记录
 const messagesTotal = ref(0);
@@ -161,18 +161,22 @@ const browserNotification = () => {
   }
 };
 
+const scrollCount = ref(0)
 // 最后一张图懒加载时，将滚动条滚至最底部
 const loadedImg = (id) => {
   const imgMessages = messageContent.value.filter(
     (item) => item.type === "image"
   );
-  if (id === imgMessages[imgMessages.length - 1].id) {
+  const Condition1 = id === imgMessages[imgMessages.length - 1].id;
+  if (scrollCount.value === 1 && Condition1) {
     messageContainer.value.scrollTop = messageContainer.value.scrollHeight;
   }
 };
 
+// 滚到最顶部时触发
 const currentPage = ref(1);
 const scrollToTop = (e) => {
+  scrollCount.value++
   if (
     e.target.scrollTop === 0 &&
     messageContent.value.length !== messagesTotal.value
@@ -184,10 +188,12 @@ const scrollToTop = (e) => {
   }
 };
 
+// @用户
 const cuePeople = (name) => {
   message.value = message.value + `@${name} `;
 };
 
+// 踢出
 const kickOutGroupChat = (id) => {
   socket.emit("kickOutGroupChat", { id, username: store.user.username });
 };
