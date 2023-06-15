@@ -63,30 +63,32 @@ const kickOutGroupChat = (id) => {
               </el-avatar>
             </template>
             <div class="user-menu">
-              <div v-if="item.identity !== 'admin'">
+              <div v-permission="['root']">
                 <div
                   class="user-menu-item"
-                  v-permission="['root']"
+                  v-if="item.identity !== 'admin'"
                   @click="rootPermission(item.sender_id, 'admin')"
                 >
                   赋予管理员权限
                 </div>
               </div>
-              <div v-if="item.identity !== 'tourist'">
+              <div v-permission="['root']">
                 <div
                   class="user-menu-item"
-                  v-permission="['root']"
+                  v-if="item.identity !== 'tourist'"
                   @click="rootPermission(item.sender_id, 'tourist')"
                 >
                   转为普通群众
                 </div>
               </div>
-              <div
-                class="user-menu-item"
-                v-permission="['root', 'admin']"
-                @click="kickOutGroupChat(item.sender_id, item.username)"
-              >
-                踢出群聊
+              <div v-permission="['root', 'admin']">
+                <div
+                  class="user-menu-item"
+                  v-if="item.identity !== 'root'"
+                  @click="kickOutGroupChat(item.sender_id, item.username)"
+                >
+                  踢出群聊
+                </div>
               </div>
               <div class="user-menu-item">暂未开放</div>
             </div>

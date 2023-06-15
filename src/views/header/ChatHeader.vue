@@ -1,5 +1,6 @@
 <script setup>
 import SystemDrawer from "@/components/SystemDrawer.vue";
+import api from "@/api";
 import { ref } from "vue";
 
 const props = defineProps({
@@ -9,21 +10,19 @@ const props = defineProps({
   },
 });
 
+const registerPeople = ref(0);
+const getAllRegisterPeople = () => {
+  api.getAllRegisterPeople().then((res) => {
+    registerPeople.value = res.data.total;
+  });
+};
+getAllRegisterPeople();
+
 const open = ref(false);
 </script>
 <template>
   <div class="chat-header">
-    <div>
-      相亲相爱一家人({{ allPeoples }})
-      <span
-        style="
-          color: #3e4452;
-          font-size: 12px;
-          transform: scale(0.8) translate(-5px, 4px);
-        "
-        >2.0.1</span
-      >
-    </div>
+    <div>相亲相爱一家人({{ allPeoples }}/{{ registerPeople }})</div>
     <div class="icon" @click="open = true">
       <el-icon size="20">
         <More />

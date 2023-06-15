@@ -30,6 +30,10 @@ app.use(ElementPlus);
 // 挂载
 app.mount('#app')
 
+// 获取主题
+const sysStore = systemStore()
+setCssVar(sysStore.chatTheme);
+
 // 注册自定义指令
 app.directive('focus', {
   mounted: (el) => el.focus(),
@@ -46,5 +50,3 @@ app.directive('permission', {
     }
   }
 })
-const sysStore = systemStore()
-setCssVar(sysStore.chatTheme);

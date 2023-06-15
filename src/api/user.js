@@ -42,3 +42,8 @@ export const clearMessages = () => api({
   loading: true,
   tips: true
 })
+
+export const getAllRegisterPeople = () => api({
+  url: '/getAllRegisterPeople',
+  method: 'post',
+})
