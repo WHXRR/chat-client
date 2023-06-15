@@ -61,7 +61,7 @@ const handleEmojiClick = (emoji) => {
 .emoji-picker,
 .picker-container {
   border-radius: 0.5rem;
-  background: #3e4452;
+  background: var(--background-color);
 }
 
 .picker-container {
