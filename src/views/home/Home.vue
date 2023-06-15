@@ -125,13 +125,26 @@ socket.on("back", ({ message, total }) => {
 });
 
 // 被踢出群聊
-socket.on("kickOut", ({ username }) => {
-  socket.disconnect();
-  store.clearToken();
-  ElNotification({
-    message: `你已被管理员${username}踢出群聊`,
-    type: "warning",
-  });
+socket.on("kickOut", ({ status, username }) => {
+  if (status === 1) {
+    socket.emit("disconnectChat", { id: store.user.id });
+    socket.disconnect();
+    store.clearToken();
+    ElNotification({
+      message: `你已被管理员${username}踢出群聊`,
+      type: "warning",
+    });
+  } else if (status === 2) {
+    ElNotification({
+      message: `操作成功`,
+      type: "success",
+    });
+  } else {
+    ElNotification({
+      message: `该用户已不在聊天室`,
+      type: "error",
+    });
+  }
 });
 
 // 断开连接
@@ -161,7 +174,7 @@ const browserNotification = () => {
   }
 };
 
-const scrollCount = ref(0)
+const scrollCount = ref(0);
 // 最后一张图懒加载时，将滚动条滚至最底部
 const loadedImg = (id) => {
   const imgMessages = messageContent.value.filter(
@@ -176,7 +189,7 @@ const loadedImg = (id) => {
 // 滚到最顶部时触发
 const currentPage = ref(1);
 const scrollToTop = (e) => {
-  scrollCount.value++
+  scrollCount.value++;
   if (
     e.target.scrollTop === 0 &&
     messageContent.value.length !== messagesTotal.value
@@ -195,7 +208,7 @@ const cuePeople = (name) => {
 
 // 踢出
 const kickOutGroupChat = (id) => {
-  socket.emit("kickOutGroupChat", { id, username: store.user.username });
+  socket.emit("kickOutGroupChat", { id, adminInfo: store.user });
 };
 </script>
 <template>

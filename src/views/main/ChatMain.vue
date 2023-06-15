@@ -132,7 +132,7 @@ const kickOutGroupChat = (id) => {
           </div>
           <div v-else class="file-content" @click="downLoadFile(item.message)">
             <div style="margin-right: 20px">{{ item.fileName }}</div>
-            <el-icon color="#ffffff" :size="50"><Folder /></el-icon>
+            <el-icon :size="50"><Folder /></el-icon>
           </div>
         </div>
       </div>
