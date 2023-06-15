@@ -200,22 +200,22 @@ const kickOutGroupChat = (id) => {
       cursor: pointer;
     }
     .time {
-      color: #3e4452;
+      color: var(--time-color);
       font-size: 12px;
       transform: scale(0.8) translate(-5px, 4px);
       transition: all 0.3s;
       &:hover {
-        color: #cfd3dc;
+        color: var(--font-color);
       }
     }
     .msg-content {
       padding: 5px 7px;
       margin-top: 5px;
       border-radius: 3px;
-      color: #21252b;
+      color: var(--message-content-color);
       font-size: 14px;
       word-break: break-all;
-      background-color: #fff;
+      background-color: var(--message-content-background-color);
     }
     .img-content {
       max-width: 20vw;
@@ -226,9 +226,11 @@ const kickOutGroupChat = (id) => {
       display: flex;
       align-items: center;
       padding: 10px 20px;
+      margin-top: 5px;
       border-radius: 5px;
+      color: var(--file-content-color);
       font-size: 14px;
-      background-color: #3e4452;
+      background-color: var(--file-content-background-color);
     }
   }
   .upload-item {

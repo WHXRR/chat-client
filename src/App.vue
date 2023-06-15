@@ -11,7 +11,6 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  color: #cfd3dc;
-  background-color: #21252b;
+  background-color: var(--background-color);
 }
 </style>

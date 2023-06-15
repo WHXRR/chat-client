@@ -193,7 +193,7 @@ const handleError = (error, file) => {
   position: relative;
   user-select: none;
   padding: 10px;
-  border-top: 1px solid #3e4452;
+  border-top: 1px solid var(--border-color);
   .emoji-container {
     position: absolute;
     top: -10px;
@@ -213,23 +213,23 @@ const handleError = (error, file) => {
     border: none;
     outline: none;
     resize: none;
-    color: #cfd3dc;
+    color: var(--font-color);
     font-size: 14px;
     box-sizing: border-box;
-    background-color: #21252b;
+    background-color: var(--background-color);
   }
   .send-btn {
     float: right;
     cursor: pointer;
     font-size: 14px;
     padding: 5px 20px;
-    background-color: #21252b;
-    border: 2px solid #323842;
+    background-color: var(--send-btn-background-color);
+    border: 2px solid var(--send-btn-border-color);
     border-radius: 1em;
-    color: #cfd3dc;
+    color: var(--send-btn-color);
     font-weight: bolder;
     transition: cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.4s;
-    box-shadow: -3px 3px 0px 0px #323842;
+    box-shadow: -3px 3px 0px 0px var(--send-btn-shadow-color);
   }
   .send-btn:hover {
     transform: translate(5px, -5px);

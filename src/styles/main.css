@@ -2,6 +2,8 @@
   margin: 0;
   padding: 0;
 }
+
+/* 滚动条样式 */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -12,34 +14,37 @@
 }
 ::-webkit-scrollbar-thumb:vertical {
   height: 6px;
-  background-color: #3e4452;
+  background-color: var(--scroll-background-color);
   -webkit-border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:horizontal {
   width: 6px;
-  background-color: #3e4452;
+  background-color: var(--scroll-background-color);
   -webkit-border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:vertical:hover,
 ::-webkit-scrollbar-thumb:horizontal:hover {
-  background-color: #3e4452;
+  background-color: var(--scroll-background-color);
+  /* background-color: #3e4452; */
 }
 
+/* 用户菜单 */
 .menu-popper {
   padding: 0 !important;
 }
 .user-menu-item {
   padding: 6px;
-  color: #fff;
+  color: var(--font-color);
   font-size: 14px;
   text-align: center;
   cursor: pointer;
   transition: all .3s;
 }
 .user-menu-item:hover {
-  background-color: #909399;
+  background-color: var(--user-menu-background-hover);
 }
 
+/* root名字特效 */
 .changing-text,
 .changing-text::after {
  letter-spacing: 3px;
@@ -50,7 +55,6 @@
  animation: 2s glitch infinite;
  animation-timing-function: steps(2, end);
 }
-
 .changing-text::after {
  --slice-0: inset(50% 50% 50% 50%);
  --slice-1: inset(80% -6px 0 0);
@@ -69,12 +73,10 @@
  text-shadow: -3px -3px 0px #f8f005, 3px 3px 0px #00e6f6;
  clip-path: var(--slice-0);
 }
-
 .changing-text:hover::after {
  animation: 1s glitch;
  animation-timing-function: steps(2, end);
 }
-
 @keyframes glitch {
  0% {
   clip-path: var(--slice-1);
@@ -131,4 +133,3 @@
   transform: translate(0);
  }
 }
-

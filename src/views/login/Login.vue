@@ -108,8 +108,8 @@ const login = async () => {
     max-width: 350px;
     padding: 40px 30px 60px 30px;
     border-radius: 10px;
-    border: 2px solid #323842;
-    box-shadow: -3px 3px 0px 0px #323842;
+    border: 2px solid var(--border-color);
+    box-shadow: -3px 3px 0px 0px var(--border-color);
     .btn-box {
       display: flex;
       justify-content: center;
@@ -122,11 +122,11 @@ const login = async () => {
         border-radius: 0.4rem;
         cursor: pointer;
         text-transform: uppercase;
-        background-color: rgb(14, 14, 26);
-        color: rgb(234, 234, 234);
+        background-color: var(--background-color);
+        color: var(--font-color);
         font-weight: 700;
         transition: 0.6s;
-        box-shadow: 0px 0px 60px #1f4c65;
+        box-shadow: 0px 0px 60px var(--send-btn-shadow-color);
       }
 
       .btn:active {
@@ -140,7 +140,7 @@ const login = async () => {
           rgba(2, 29, 78, 0.681) 0%,
           rgba(31, 215, 232, 0.873) 60%
         );
-        color: rgb(4, 4, 38);
+        color: var(--font2-color);
       }
     }
     .tips {

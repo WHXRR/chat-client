@@ -35,14 +35,14 @@ socket.on("backOnlinePeople", (data) => {
 });
 
 // 账号在别处登录
-socket.on("multipleLogins", () => {
-  socket.disconnect();
-  store.clearToken();
-  ElNotification({
-    message: `账号在别处登录`,
-    type: "warning",
-  });
-});
+// socket.on("multipleLogins", () => {
+//   socket.disconnect();
+//   store.clearToken();
+//   ElNotification({
+//     message: `账号在别处登录`,
+//     type: "warning",
+//   });
+// });
 
 // 处理服务器发送的历史聊天记录
 const messagesTotal = ref(0);
@@ -216,8 +216,8 @@ const kickOutGroupChat = (id) => {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  color: #cfd3dc;
-  background-color: #21252b;
+  color: var(--font-color);
+  background-color: var(--background-color);
   .main {
     flex: 1;
     overflow: hidden;

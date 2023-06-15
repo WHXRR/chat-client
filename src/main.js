@@ -1,13 +1,17 @@
 import App from './App.vue'
 import pinia from '@/store'
 import { useStore } from "@/store/user";
+import { systemStore } from "@/store/system";
 import { createApp } from 'vue'
 import { setupRouter } from '@/router'
-import '@/assets/css/element.scss'
-// import 'element-plus/dist/index.css'
+import { setCssVar } from "@/hooks/useSwitchTheme";
+// import '@/assets/css/element.scss'
+import 'element-plus/dist/index.css'
+import 'element-plus/theme-chalk/dark/css-vars.css'
+import '@/styles/var.css'
 import ElementPlus from 'element-plus'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-import "./assets/css/main.css"
+import "./styles/main.css"
 
 const app = createApp(App)
 
@@ -31,7 +35,7 @@ app.directive('focus', {
   mounted: (el) => el.focus(),
 })
 
-const store = useStore(pinia);
+const store = useStore();
 app.directive('permission', {
   mounted: (el, binding) => {
     const userPermission = store.user.identity
@@ -42,8 +46,5 @@ app.directive('permission', {
     }
   }
 })
-
-// 刷新时重新获取个人信息
-// if (store.token) {
-//   store.getUserInfo()
-// }
+const sysStore = systemStore()
+setCssVar(sysStore.chatTheme);

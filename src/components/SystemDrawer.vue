@@ -6,6 +6,8 @@ import { useStore } from "@/store/user";
 import { systemStore } from "@/store/system";
 import { storeToRefs } from "pinia";
 import { ElMessage } from "element-plus";
+import { setCssVar } from "@/hooks/useSwitchTheme";
+import { Sunny, Moon } from "@element-plus/icons-vue";
 
 const socket = inject("socket");
 const store = useStore();
@@ -35,7 +37,7 @@ const beforeAvatarUpload = (rawFile) => {
 };
 
 const saveInfo = () => {
-  if (!store.user.username) return 
+  if (!store.user.username) return;
   api
     .updateUserInfo({
       username: store.user.username,
@@ -48,8 +50,12 @@ const saveInfo = () => {
     });
 };
 
+const changeTheme = (e) => {
+  setCssVar(e);
+};
+
 const clearMessages = () => {
-  api.clearMessages()
+  api.clearMessages();
 };
 
 const exit = () => {
@@ -106,15 +112,29 @@ const exit = () => {
           </template>
         </el-image>
         <input class="username-ipt" type="text" v-model="user.username" />
-        <el-button type="info" @click="saveInfo" :loading="sysStore.btnLoading"
+        <el-button @click="saveInfo" :loading="sysStore.btnLoading"
           >保存</el-button
         >
       </div>
       <div class="menu">
+        <div class="menu-item">
+          <div>主题切换</div>
+          <div>
+            <el-switch
+              @change="changeTheme"
+              v-model="sysStore.chatTheme"
+              inline-prompt
+              :active-icon="Moon"
+              :inactive-icon="Sunny"
+              active-value="dark"
+              inactive-value="light"
+            />
+          </div>
+        </div>
         <div v-permission="['root']">
           <div class="menu-item" @click="clearMessages">
             <div>清空聊天记录</div>
-            <el-icon :size="20"><SwitchButton /></el-icon>
+            <el-icon :size="20"><Delete /></el-icon>
           </div>
         </div>
         <div class="menu-item" @click="exit">
