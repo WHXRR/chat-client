@@ -13,17 +13,18 @@ const formRef = ref(null);
 const form = reactive({
   username: "",
   password: "",
+  captcha: "",
 });
 const rules = reactive({
   username: {
     required: true,
-    message: "Please input Activity username",
+    message: "Please input username",
     trigger: "blur",
   },
   password: [
     {
       required: true,
-      message: "Please input Activity password",
+      message: "Please input password",
       trigger: "blur",
     },
     {
@@ -33,7 +34,21 @@ const rules = reactive({
       trigger: "blur",
     },
   ],
+  captcha: {
+    required: true,
+    message: "Please input verification code",
+    trigger: "blur",
+  },
 });
+
+const captchaRef = ref(null);
+const getCaptcha = () => {
+  api.getCaptcha().then((res) => {
+    captchaRef.value.innerHTML = res.data;
+  });
+};
+getCaptcha();
+
 const login = async () => {
   if (!formRef.value) return;
   await formRef.value.validate(async (valid) => {
@@ -80,11 +95,13 @@ const login = async () => {
           <el-input autofocus v-model="form.username" />
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input
-            type="password"
-            v-model="form.password"
-            @keyup.enter="login"
-          />
+          <el-input type="password" v-model="form.password" />
+        </el-form-item>
+        <el-form-item label="验证码" prop="captcha">
+          <div class="captcha-container">
+            <el-input v-model="form.captcha" @keyup.enter="login" />
+            <div class="captcha" ref="captchaRef" @click="getCaptcha"></div>
+          </div>
         </el-form-item>
       </el-form>
       <div class="btn-box">
@@ -110,6 +127,16 @@ const login = async () => {
     border-radius: 10px;
     border: 2px solid var(--border-color);
     box-shadow: -3px 3px 0px 0px var(--border-color);
+    .captcha-container {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      .captcha {
+        cursor: pointer;
+        margin-left: 20px;
+        background-color: var(--message-content-background-color);
+      }
+    }
     .btn-box {
       display: flex;
       justify-content: center;

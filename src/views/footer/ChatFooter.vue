@@ -16,7 +16,7 @@ const props = defineProps({
 const emit = defineEmits(["send", "update:modelValue", "sendImage"]);
 const send = () => {
   if (!message.value) return;
-  if (store.user.identity === 'tourist' && message.value.length > 50) {
+  if (store.user.identity === "tourist" && message.value.length > 50) {
     return ElNotification({
       message: "充值成为会员后可解锁发消息无长度限制功能噢~",
       type: "warning",
@@ -124,7 +124,7 @@ const beforeFileUpload = (rawFile) => {
   return true;
 };
 const handleSuccess = (res, file) => {
-  if (!res.status) return
+  if (!res.status) return;
   if (file.file.type.includes("image/")) {
     return emit("sendImage", {
       fileName: file.file.name,
@@ -147,6 +147,35 @@ const handleError = (error, file) => {
     message,
     type: "error",
   });
+};
+
+const pasteRef = ref(null);
+const handlePaste = (e) => {
+  const txt = e.clipboardData.getData("Text");
+  if (typeof txt == "string" && txt !== "") return;
+  let file = null;
+  const items = (e.clipboardData || window.clipboardData).items;
+  if (items && items.length) {
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf("image") !== -1) {
+        // 如果是image类型存为file
+        file = items[i].getAsFile();
+        break;
+      }
+    }
+  }
+  if (file) {
+    let reader = new FileReader();
+    reader.onload = (event) => {
+      let img = document.createElement("img");
+      img.style.maxWidth = '20%'
+      img.style.maxHeight = '100px'
+      img.style.marginRight = '10px'
+      img.src = event.target.result;
+      pasteRef.value.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  }
 };
 </script>
 <template>
@@ -184,8 +213,12 @@ const handleError = (error, file) => {
       class="send-ipt"
       placeholder="请输入..."
       v-model.trim="message"
+      @paste="handlePaste"
     ></textarea>
-    <button class="send-btn" @click="throttleSend">发送</button>
+    <div class="send-container">
+      <div class="paste-container" ref="pasteRef"></div>
+      <button class="send-btn" @click="throttleSend">发送</button>
+    </div>
   </div>
 </template>
 <style lang="scss" scoped>
@@ -218,21 +251,29 @@ const handleError = (error, file) => {
     box-sizing: border-box;
     background-color: var(--background-color);
   }
-  .send-btn {
-    float: right;
-    cursor: pointer;
-    font-size: 14px;
-    padding: 5px 20px;
-    background-color: var(--send-btn-background-color);
-    border: 2px solid var(--send-btn-border-color);
-    border-radius: 1em;
-    color: var(--send-btn-color);
-    font-weight: bolder;
-    transition: cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.4s;
-    box-shadow: -3px 3px 0px 0px var(--send-btn-shadow-color);
-  }
-  .send-btn:hover {
-    transform: translate(5px, -5px);
+  .send-container {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    .paste-container {
+      flex: 1;
+    }
+    .send-btn {
+      float: right;
+      cursor: pointer;
+      font-size: 14px;
+      padding: 5px 20px;
+      background-color: var(--send-btn-background-color);
+      border: 2px solid var(--send-btn-border-color);
+      border-radius: 1em;
+      color: var(--send-btn-color);
+      font-weight: bolder;
+      transition: cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.4s;
+      box-shadow: -3px 3px 0px 0px var(--send-btn-shadow-color);
+    }
+    .send-btn:hover {
+      transform: translate(5px, -5px);
+    }
   }
 }
 </style>

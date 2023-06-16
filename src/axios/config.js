@@ -72,6 +72,7 @@ function myAxios(axiosConfig) {
     headers: {
       Authorization: store.token || localStorage.getItem('token')
     },
+    withCredentials: true,
     ...axiosConfig?.config
   })
   service.interceptors.request.use(
