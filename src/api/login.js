@@ -12,7 +12,8 @@ export const register = (data) => api({
   url: '/api/register',
   method: 'post',
   data,
-  loading: true
+  loading: true,
+  tips: true
 })
 
 export const getCaptcha = () => api({
