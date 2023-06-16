@@ -14,14 +14,19 @@ const props = defineProps({
   modelValue: String,
 });
 const emit = defineEmits(["send", "update:modelValue", "sendImage"]);
+
+const fileList = ref([]);
 const send = () => {
-  if (!message.value) return;
   if (store.user.identity === "tourist" && message.value.length > 50) {
     return ElNotification({
       message: "充值成为会员后可解锁发消息无长度限制功能噢~",
       type: "warning",
     });
   }
+  if (fileList.value.length) {
+    uploadFile({ file: fileList.value[0] });
+  }
+  if (!message.value) return;
   emit("send");
 };
 let warningNum = 0;
@@ -126,6 +131,8 @@ const beforeFileUpload = (rawFile) => {
 const handleSuccess = (res, file) => {
   if (!res.status) return;
   if (file.file.type.includes("image/")) {
+    fileList.value = [];
+    pasteImg.value = [];
     return emit("sendImage", {
       fileName: file.file.name,
       message: res.data.url,
@@ -150,7 +157,9 @@ const handleError = (error, file) => {
 };
 
 const pasteRef = ref(null);
+const pasteImg = ref([]);
 const handlePaste = (e) => {
+  if (store.user.identity === "tourist") return;
   const txt = e.clipboardData.getData("Text");
   if (typeof txt == "string" && txt !== "") return;
   let file = null;
@@ -165,14 +174,10 @@ const handlePaste = (e) => {
     }
   }
   if (file) {
+    fileList.value.push(file);
     let reader = new FileReader();
     reader.onload = (event) => {
-      let img = document.createElement("img");
-      img.style.maxWidth = '20%'
-      img.style.maxHeight = '100px'
-      img.style.marginRight = '10px'
-      img.src = event.target.result;
-      pasteRef.value.appendChild(img);
+      pasteImg.value = [{ src: event.target.result }];
     };
     reader.readAsDataURL(file);
   }
@@ -216,7 +221,14 @@ const handlePaste = (e) => {
       @paste="handlePaste"
     ></textarea>
     <div class="send-container">
-      <div class="paste-container" ref="pasteRef"></div>
+      <div class="paste-container" ref="pasteRef">
+        <img
+          class="paste-img"
+          v-for="(item, index) in pasteImg"
+          :key="index"
+          :src="item.src"
+        />
+      </div>
       <button class="send-btn" @click="throttleSend">发送</button>
     </div>
   </div>
@@ -257,6 +269,10 @@ const handlePaste = (e) => {
     justify-content: space-between;
     .paste-container {
       flex: 1;
+      .paste-img {
+        max-width: 20%;
+        max-height: 100px;
+      }
     }
     .send-btn {
       float: right;

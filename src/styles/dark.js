@@ -14,8 +14,8 @@ const darkTheme = {
   '--send-btn-shadow-color': '#323842',
   '--scroll-background-color': '#3e4452',
   '--user-menu-background-hover': '#909399',
-  '--el-color-primary': '#000000',
   '--font2-color': '#000000',
+  '--el-color-primary': '#000000',
 }
 
 export { darkTheme }

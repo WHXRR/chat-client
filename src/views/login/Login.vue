@@ -54,7 +54,7 @@ const login = async () => {
   await formRef.value.validate(async (valid) => {
     if (valid) {
       let res1 = await api.login({ ...form });
-      if (!res1.status && res1.msg == "未查询到该用户") {
+      if (!res1.status && res1.msg === "未查询到该用户") {
         ElMessageBox.confirm("未查询到该用户，是否注册？", {
           confirmButtonText: "确认",
           cancelButtonText: "取消",
@@ -71,11 +71,13 @@ const login = async () => {
             }
           }
         });
-      } else {
+      } else if (res1.status) {
         store.token = res1.data.token;
         store.user = { ...res1.data };
         localStorage.setItem("token", res1.data.token);
         router.push({ name: "Home" });
+      } else {
+        return
       }
     }
   });
