@@ -196,6 +196,9 @@ const exit = () => {
 .avatar-content {
   width: 140px;
   height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   border-radius: 50%;
 }
 .menu-item {
