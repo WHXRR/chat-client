@@ -94,7 +94,7 @@ const uploadFile = (file) => {
   const formData = new FormData();
   formData.append("file", file.file);
   api
-    .uploadFiles(formData, {
+  .uploadFiles(formData, {
       // cancelToken,
       signal: controller.signal,
       onUploadProgress: (progressEvent) => {
@@ -182,6 +182,11 @@ const handlePaste = (e) => {
     reader.readAsDataURL(file);
   }
 };
+
+const deletePasteImg = () => {
+  fileList.value = [];
+  pasteImg.value = [];
+};
 </script>
 <template>
   <div class="chat-footer">
@@ -222,12 +227,12 @@ const handlePaste = (e) => {
     ></textarea>
     <div class="send-container">
       <div class="paste-container" ref="pasteRef">
-        <img
-          class="paste-img"
-          v-for="(item, index) in pasteImg"
-          :key="index"
-          :src="item.src"
-        />
+        <div class="paste-img-container" v-for="(item, index) in pasteImg">
+          <img class="paste-img" :key="index" :src="item.src" />
+          <el-icon color="#ee3131" class="close-icon" @click="deletePasteImg">
+            <CircleCloseFilled />
+          </el-icon>
+        </div>
       </div>
       <button class="send-btn" @click="throttleSend">发送</button>
     </div>
@@ -269,9 +274,19 @@ const handlePaste = (e) => {
     justify-content: space-between;
     .paste-container {
       flex: 1;
-      .paste-img {
+      .paste-img-container {
+        position: relative;
         max-width: 20%;
-        max-height: 100px;
+        .paste-img {
+          width: 100%;
+          max-height: 100px;
+        }
+        .close-icon {
+          cursor: pointer;
+          position: absolute;
+          top: 5px;
+          right: 5px;
+        }
       }
     }
     .send-btn {

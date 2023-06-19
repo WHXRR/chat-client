@@ -82,7 +82,6 @@ const send = () => {
     type: "text",
     ...store.user,
     sender_id: store.user.id,
-    create_time: date.toLocaleString(),
   });
   message.value = "";
 };
@@ -92,7 +91,6 @@ const sendImage = (data) => {
     ...store.user,
     ...data,
     sender_id: store.user.id,
-    create_time: date.toLocaleString(),
   });
 };
 const sendFile = (data) => {
@@ -100,7 +98,6 @@ const sendFile = (data) => {
     ...store.user,
     ...data,
     sender_id: store.user.id,
-    create_time: date.toLocaleString(),
   });
 };
 
