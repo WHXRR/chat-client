@@ -94,7 +94,7 @@ const uploadFile = (file) => {
   const formData = new FormData();
   formData.append("file", file.file);
   api
-  .uploadFiles(formData, {
+    .uploadFiles(formData, {
       // cancelToken,
       signal: controller.signal,
       onUploadProgress: (progressEvent) => {
@@ -280,6 +280,7 @@ const deletePasteImg = () => {
         .paste-img {
           width: 100%;
           max-height: 100px;
+          object-fit: contain;
         }
         .close-icon {
           cursor: pointer;
