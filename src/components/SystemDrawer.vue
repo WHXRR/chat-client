@@ -5,7 +5,7 @@ import { computed, inject } from "vue";
 import { useStore } from "@/store/user";
 import { systemStore } from "@/store/system";
 import { storeToRefs } from "pinia";
-import { ElMessage } from "element-plus";
+import { ElNotification } from "element-plus";
 import { setCssVar } from "@/hooks/useSwitchTheme";
 import { Sunny, Moon } from "@element-plus/icons-vue";
 
@@ -22,15 +22,28 @@ const visible = computed({
 });
 
 const handleAvatarSuccess = (res) => {
-  store.user.avatar = res.data.url;
+  if (res.status) {
+    store.user.avatar = res.data.url;
+  } else {
+    ElNotification({
+      message: res.msg,
+      type: "error",
+    });
+  }
 };
 
 const beforeAvatarUpload = (rawFile) => {
   if (!["image/jpeg", "image/png", "image/jpg"].includes(rawFile.type)) {
-    ElMessage.error("图片必须为jpeg、png、jpeg格式");
+    ElNotification({
+      message: "图片必须为jpeg、png、jpeg格式",
+      type: "error",
+    });
     return false;
   } else if (rawFile.size / 1024 / 1024 > 2) {
-    ElMessage.error("上传的图片不能超过2MB");
+    ElNotification({
+      message: "上传的图片不能超过2MB",
+      type: "error",
+    });
     return false;
   }
   return true;
@@ -86,12 +99,7 @@ const exit = () => {
             Authorization: store.token,
           }"
         >
-          <el-image
-            v-if="user.avatar"
-            class="img-content"
-            :src="user.avatar"
-            fit="contain"
-          >
+          <el-image class="img-content" :src="user.avatar" fit="contain">
             <template #error>
               <div class="image-slot">
                 <el-icon :size="80"><Pear /></el-icon>
@@ -111,7 +119,7 @@ const exit = () => {
             </div>
           </template>
         </el-image>
-        <input class="username-ipt" type="text" v-model="user.username" />
+        <input class="username-ipt" type="text" v-model.trim="user.username" />
         <el-button @click="saveInfo" :loading="sysStore.btnLoading"
           >保存</el-button
         >

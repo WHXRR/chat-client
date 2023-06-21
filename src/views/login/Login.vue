@@ -16,11 +16,19 @@ const form = reactive({
   captcha: "",
 });
 const rules = reactive({
-  username: {
-    required: true,
-    message: "Please input username",
-    trigger: "blur",
-  },
+  username: [
+    {
+      min: 1,
+      max: 12,
+      message: "Length should be 1 to 12",
+      trigger: "blur",
+    },
+    {
+      required: true,
+      message: "Please input username",
+      trigger: "blur",
+    },
+  ],
   password: [
     {
       required: true,
@@ -77,7 +85,7 @@ const login = async () => {
         localStorage.setItem("token", res1.data.token);
         router.push({ name: "Home" });
       } else {
-        return
+        return;
       }
     }
   });
@@ -94,10 +102,10 @@ const login = async () => {
         :rules="rules"
       >
         <el-form-item label="用户名" prop="username">
-          <el-input autofocus v-model="form.username" />
+          <el-input autofocus v-model.trim="form.username" />
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input type="password" v-model="form.password" />
+          <el-input type="password" v-model.trim="form.password" />
         </el-form-item>
         <el-form-item label="验证码" prop="captcha">
           <div class="captcha-container">
