@@ -32,14 +32,14 @@ socket.on("backOnlinePeople", (data) => {
 });
 
 // 账号在别处登录
-socket.on("multipleLogins", () => {
-  socket.disconnect();
-  store.clearToken();
-  ElNotification({
-    message: `账号在别处登录`,
-    type: "warning",
-  });
-});
+// socket.on("multipleLogins", () => {
+//   socket.disconnect();
+//   store.clearToken();
+//   ElNotification({
+//     message: `账号在别处登录`,
+//     type: "warning",
+//   });
+// });
 
 // 处理服务器发送的历史聊天记录
 const messagesTotal = ref(0);
@@ -123,11 +123,13 @@ watch(
   () => messageContent.value,
   (newValue) => {
     messagesUser.value = newValue.reduce((pre, next) => {
-      pre[next.sender_id] = {
-        avatar: next.avatar,
-        username: next.username,
-        identity: next.identity,
-      };
+      if (!pre[next.sender_id]) {
+        pre[next.sender_id] = {
+          avatar: next.avatar,
+          username: next.username,
+          identity: next.identity,
+        };
+      }
       return pre;
     }, {});
   },
