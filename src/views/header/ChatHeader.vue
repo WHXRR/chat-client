@@ -25,33 +25,37 @@ const open = ref(false);
 const showOnlineContainer = ref(false);
 </script>
 <template>
-  <div class="chat-header">
-    <div>相亲相爱一家人({{ allPeoples }}/{{ registerPeople }})</div>
-    <div class="icon" @click="open = true">
-      <el-icon size="20">
-        <More />
-      </el-icon>
-    </div>
-  </div>
-  <div class="online-container">
-    <Transition name="online">
-      <div class="online-content" v-show="showOnlineContainer">
-        <div class="online-user" v-for="item in store.onlineUsers">
-          <el-avatar class="avatar" :src="item.avatar">
-            <el-icon :size="20"><Pear /></el-icon>
-          </el-avatar>
-          <div class="username">{{ item.username }}</div>
-        </div>
+  <div class="header">
+    <div class="chat-header">
+      <div>相亲相爱一家人({{ allPeoples }}/{{ registerPeople }})</div>
+      <div class="icon" @click="open = true">
+        <el-icon size="20">
+          <More />
+        </el-icon>
       </div>
-    </Transition>
-    <div
-      class="online-icon"
-      @click="showOnlineContainer = !showOnlineContainer"
-    >
-      <el-icon :size="14" v-show="!showOnlineContainer"
-        ><ArrowDownBold
-      /></el-icon>
-      <el-icon :size="14" v-show="showOnlineContainer"><ArrowUpBold /></el-icon>
+    </div>
+    <div class="online-container">
+      <Transition name="online">
+        <div class="online-content" v-show="showOnlineContainer">
+          <div class="online-user" v-for="item in store.onlineUsers">
+            <el-avatar class="avatar" :src="item.avatar">
+              <el-icon :size="20"><Pear /></el-icon>
+            </el-avatar>
+            <div class="username">{{ item.username }}</div>
+          </div>
+        </div>
+      </Transition>
+      <div
+        class="online-icon"
+        @click="showOnlineContainer = !showOnlineContainer"
+      >
+        <el-icon :size="14" v-show="!showOnlineContainer"
+          ><ArrowDownBold
+        /></el-icon>
+        <el-icon :size="14" v-show="showOnlineContainer"
+          ><ArrowUpBold
+        /></el-icon>
+      </div>
     </div>
   </div>
   <SystemDrawer v-model="open" />
@@ -67,6 +71,9 @@ const showOnlineContainer = ref(false);
   transform: translateY(-50%);
   opacity: 0;
 }
+.header {
+  position: relative;
+}
 .chat-header {
   display: flex;
   align-items: center;
@@ -78,6 +85,9 @@ const showOnlineContainer = ref(false);
   }
 }
 .online-container {
+  position: absolute;
+  width: 100%;
+  z-index: 2;
   .online-content {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(40px, 40px));
@@ -90,6 +100,7 @@ const showOnlineContainer = ref(false);
     border-bottom-right-radius: 5px;
     border: 1px solid var(--border-color);
     border-top: none;
+    background-color: var(--background-color);
     .online-user {
       text-align: center;
     }
@@ -108,6 +119,7 @@ const showOnlineContainer = ref(false);
     border: 1px solid var(--border-color);
     border-top: none;
     box-sizing: border-box;
+    background-color: var(--background-color);
   }
 }
 </style>
