@@ -6,7 +6,8 @@ export const useStore = defineStore('user', {
   state: () => {
     return {
       user: {},
-      token: localStorage.getItem('token') || ''
+      token: localStorage.getItem('token') || '',
+      onlineUsers: []
     }
   },
   actions: {

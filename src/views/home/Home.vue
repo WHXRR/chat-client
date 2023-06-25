@@ -28,7 +28,8 @@ socket.on("connect", () => {
 // 更新客户端在线人数
 const allPeoples = ref(0);
 socket.on("backOnlinePeople", (data) => {
-  allPeoples.value = data;
+  allPeoples.value = Object.keys(data).length;
+  store.onlineUsers = Object.values(data)
 });
 
 // 账号在别处登录
