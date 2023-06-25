@@ -1,8 +1,11 @@
 <script setup>
 import SystemDrawer from "@/components/SystemDrawer.vue";
 import api from "@/api";
+import socket from "@/socket";
 import { ref } from "vue";
 import { useStore } from "@/store/user";
+
+const emit = defineEmits(["kickOutGroupChat"]);
 
 const store = useStore();
 const props = defineProps({
@@ -10,6 +13,7 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
+  messagesUser: Object,
 });
 
 const registerPeople = ref(0);
@@ -23,6 +27,19 @@ getAllRegisterPeople();
 const open = ref(false);
 
 const showOnlineContainer = ref(false);
+const rootPermission = (id, permission) => {
+  api.grantPermissions({ id, permission }).then((res) => {
+    if (res.status) {
+      socket.emit("updateUserInfo", {
+        id,
+      });
+    }
+  });
+};
+
+const kickOutGroupChat = (id) => {
+  emit("kickOutGroupChat", id);
+};
 </script>
 <template>
   <div class="header">
@@ -38,10 +55,61 @@ const showOnlineContainer = ref(false);
       <Transition name="online">
         <div class="online-content" v-show="showOnlineContainer">
           <div class="online-user" v-for="item in store.onlineUsers">
-            <el-avatar class="avatar" :src="item.avatar">
-              <el-icon :size="20"><Pear /></el-icon>
-            </el-avatar>
-            <div class="username">{{ item.username }}</div>
+            <el-popover
+              placement="right"
+              trigger="click"
+              popper-class="menu-popper"
+            >
+              <template #reference>
+                <div style="cursor: pointer">
+                  <el-avatar
+                    class="avatar"
+                    :src="messagesUser[item.id]?.avatar"
+                  >
+                    <el-icon :size="20"><Pear /></el-icon>
+                  </el-avatar>
+                  <div class="username">
+                    {{ messagesUser[item.id]?.username }}
+                  </div>
+                </div>
+              </template>
+              <div class="user-menu">
+                <div
+                  class="user-menu-item"
+                  v-if="
+                    !['admin', 'root'].includes(
+                      messagesUser[item.id]?.identity
+                    ) && store.user.identity === 'root'
+                  "
+                  @click="rootPermission(item.id, 'admin')"
+                >
+                  赋予管理员权限
+                </div>
+                <div
+                  class="user-menu-item"
+                  v-if="
+                    !['tourist', 'root'].includes(
+                      messagesUser[item.id]?.identity
+                    ) && store.user.identity === 'root'
+                  "
+                  @click="rootPermission(item.id, 'tourist')"
+                >
+                  转为普通群众
+                </div>
+                <div
+                  class="user-menu-item"
+                  v-if="
+                    messagesUser[item.id]?.identity !== 'root' &&
+                    ['root', 'admin'].includes(store.user.identity) &&
+                    item.id !== store.user.id
+                  "
+                  @click="kickOutGroupChat(item.id, item.username)"
+                >
+                  踢出群聊
+                </div>
+                <div class="user-menu-item">暂未开放</div>
+              </div>
+            </el-popover>
           </div>
         </div>
       </Transition>
@@ -107,6 +175,7 @@ const showOnlineContainer = ref(false);
     .username {
       overflow: hidden;
       text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
   .online-icon {

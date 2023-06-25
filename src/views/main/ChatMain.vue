@@ -66,37 +66,46 @@ const kickOutGroupChat = (id) => {
             popper-class="menu-popper"
           >
             <template #reference>
-              <el-avatar class="avatar" :src="messagesUser[item.sender_id]?.avatar">
+              <el-avatar
+                class="avatar"
+                :src="messagesUser[item.sender_id]?.avatar"
+              >
                 <el-icon :size="30"><Pear /></el-icon>
               </el-avatar>
             </template>
             <div class="user-menu">
-              <div>
-                <div
-                  class="user-menu-item"
-                  v-if="(messagesUser[item.sender_id]?.identity !== 'admin') && (store.user.identity === 'root')"
-                  @click="rootPermission(item.sender_id, 'admin')"
-                >
-                  赋予管理员权限
-                </div>
+              <div
+                class="user-menu-item"
+                v-if="
+                  !['admin', 'root'].includes(
+                    messagesUser[item.id]?.identity
+                  ) && store.user.identity === 'root'
+                "
+                @click="rootPermission(item.sender_id, 'admin')"
+              >
+                赋予管理员权限
               </div>
-              <div>
-                <div
-                  class="user-menu-item"
-                  v-if="(messagesUser[item.sender_id]?.identity !== 'tourist') && (store.user.identity === 'root')"
-                  @click="rootPermission(item.sender_id, 'tourist')"
-                >
-                  转为普通群众
-                </div>
+              <div
+                class="user-menu-item"
+                v-if="
+                  !['tourist', 'root'].includes(
+                    messagesUser[item.id]?.identity
+                  ) && store.user.identity === 'root'
+                "
+                @click="rootPermission(item.sender_id, 'tourist')"
+              >
+                转为普通群众
               </div>
-              <div>
-                <div
-                  class="user-menu-item"
-                  v-if="(messagesUser[item.sender_id]?.identity !== 'root') && (['root', 'admin'].includes(store.user.identity))"
-                  @click="kickOutGroupChat(item.sender_id, item.username)"
-                >
-                  踢出群聊
-                </div>
+              <div
+                class="user-menu-item"
+                v-if="
+                  !['root'].includes(messagesUser[item.id]?.identity) &&
+                  ['root', 'admin'].includes(store.user.identity) &&
+                  item.sender_id !== store.user.id
+                "
+                @click="kickOutGroupChat(item.sender_id, item.username)"
+              >
+                踢出群聊
               </div>
               <div class="user-menu-item">暂未开放</div>
             </div>

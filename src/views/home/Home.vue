@@ -29,7 +29,7 @@ socket.on("connect", () => {
 const allPeoples = ref(0);
 socket.on("backOnlinePeople", (data) => {
   allPeoples.value = Object.keys(data).length;
-  store.onlineUsers = Object.values(data)
+  store.onlineUsers = Object.values(data);
 });
 
 // 账号在别处登录
@@ -123,7 +123,7 @@ const messagesUser = ref([]);
 watch(
   () => messageContent.value,
   (newValue) => {
-    messagesUser.value = newValue.reduce((pre, next) => {
+    const distinctObj = newValue.reduce((pre, next) => {
       if (!pre[next.sender_id]) {
         pre[next.sender_id] = {
           avatar: next.avatar,
@@ -133,6 +133,9 @@ watch(
       }
       return pre;
     }, {});
+    Object.keys(distinctObj).forEach((key) => {
+      messagesUser.value[key] = distinctObj[key];
+    });
   },
   { deep: true }
 );
@@ -146,6 +149,15 @@ socket.on("somebodyUpdateInfo", (data) => {
   if (data.id === store.user.id) {
     store.getUserInfo();
   }
+});
+socket.on("allOnlineUsers", (data) => {
+  data.forEach((item) => {
+    messagesUser.value[item.id] = {
+      avatar: item.avatar,
+      username: item.username,
+      identity: item.identity,
+    };
+  });
 });
 
 // 被踢出群聊
@@ -237,7 +249,11 @@ const kickOutGroupChat = (id) => {
 </script>
 <template>
   <div class="chat-container">
-    <ChatHeader :allPeoples="allPeoples" />
+    <ChatHeader
+      :allPeoples="allPeoples"
+      :messagesUser="messagesUser"
+      @kickOutGroupChat="kickOutGroupChat"
+    />
     <div class="main" ref="messageContainer" @scroll="scrollToTop">
       <ChatMain
         :messageContent="messageContent"
