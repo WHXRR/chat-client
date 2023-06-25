@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { router } from '@/router'
 import api from '@/api'
-// import socket from "@/utils/socket";
+// import socket from "@/socket";
 export const useStore = defineStore('user', {
   state: () => {
     return {

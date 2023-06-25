@@ -43,9 +43,7 @@ const store = useStore();
 app.directive('permission', {
   mounted: (el, binding) => {
     const userPermission = store.user.identity
-    if (binding.value.includes(userPermission)) {
-      el.style.display = 'block'
-    } else {
+    if (!binding.value.includes(userPermission)) {
       el.parentNode.removeChild(el);
     }
   }

@@ -204,7 +204,7 @@ const deletePasteImg = () => {
       <el-upload
         class="upload-file"
         name="file"
-        v-permission="['root', 'admin']"
+        v-if="['root', 'admin'].includes(store.user.identity)"
         :on-success="handleSuccess"
         :on-error="handleError"
         :before-upload="beforeFileUpload"

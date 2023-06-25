@@ -3,6 +3,7 @@ import { useStore } from "@/store/user";
 import { uploadStore } from "@/store/upload";
 import UploadLoading from "@/components/UploadLoading.vue";
 import api from "@/api";
+import socket from "@/socket";
 
 const emit = defineEmits(["loadedImg", "cuePeople", "kickOutGroupChat"]);
 const date = new Date();
@@ -10,6 +11,7 @@ const store = useStore();
 const useUploadStore = uploadStore();
 const props = defineProps({
   messageContent: Array,
+  messagesUser: Object,
 });
 
 const downLoadFile = (url) => {
@@ -26,7 +28,13 @@ const clickName = (name) => {
 };
 
 const rootPermission = (id, permission) => {
-  api.grantPermissions({ id, permission });
+  api.grantPermissions({ id, permission }).then((res) => {
+    if (res.status) {
+      socket.emit("updateUserInfo", {
+        id,
+      });
+    }
+  });
 };
 
 const kickOutGroupChat = (id) => {
@@ -45,7 +53,7 @@ const kickOutGroupChat = (id) => {
         <div>
           <el-avatar
             class="avatar"
-            :src="item.avatar"
+            :src="messagesUser[item.sender_id]?.avatar"
             v-if="item.sender_id === store.user.id"
           >
             <el-icon :size="30"><Pear /></el-icon>
@@ -58,33 +66,33 @@ const kickOutGroupChat = (id) => {
             popper-class="menu-popper"
           >
             <template #reference>
-              <el-avatar class="avatar" :src="item.avatar">
+              <el-avatar class="avatar" :src="messagesUser[item.sender_id]?.avatar">
                 <el-icon :size="30"><Pear /></el-icon>
               </el-avatar>
             </template>
             <div class="user-menu">
-              <div v-permission="['root']">
+              <div>
                 <div
                   class="user-menu-item"
-                  v-if="item.identity !== 'admin'"
+                  v-if="(messagesUser[item.sender_id]?.identity !== 'admin') && (store.user.identity === 'root')"
                   @click="rootPermission(item.sender_id, 'admin')"
                 >
                   赋予管理员权限
                 </div>
               </div>
-              <div v-permission="['root']">
+              <div>
                 <div
                   class="user-menu-item"
-                  v-if="item.identity !== 'tourist'"
+                  v-if="(messagesUser[item.sender_id]?.identity !== 'tourist') && (store.user.identity === 'root')"
                   @click="rootPermission(item.sender_id, 'tourist')"
                 >
                   转为普通群众
                 </div>
               </div>
-              <div v-permission="['root', 'admin']">
+              <div>
                 <div
                   class="user-menu-item"
-                  v-if="item.identity !== 'root'"
+                  v-if="(messagesUser[item.sender_id]?.identity !== 'root') && (['root', 'admin'].includes(store.user.identity))"
                   @click="kickOutGroupChat(item.sender_id, item.username)"
                 >
                   踢出群聊
@@ -94,14 +102,31 @@ const kickOutGroupChat = (id) => {
             </div>
           </el-popover>
           <!-- 标签 -->
-          <div class="tag" v-if="item.identity === 'admin'">管理员</div>
-          <div class="tag" v-if="item.identity === 'root'">root</div>
+          <div
+            class="tag"
+            v-if="messagesUser[item.sender_id]?.identity === 'admin'"
+          >
+            管理员
+          </div>
+          <div
+            class="tag"
+            v-if="messagesUser[item.sender_id]?.identity === 'root'"
+          >
+            root
+          </div>
         </div>
         <div class="msg-right">
-          <div class="user-name" @click="clickName(item.username)">
+          <div
+            class="user-name"
+            @click="clickName(messagesUser[item.sender_id]?.username)"
+          >
             <span
-              :class="['root'].includes(item.identity) ? 'changing-text' : ''"
-              >{{ item.username }}</span
+              :class="
+                ['root'].includes(messagesUser[item.sender_id]?.identity)
+                  ? 'changing-text'
+                  : ''
+              "
+              >{{ messagesUser[item.sender_id]?.username }}</span
             >
             <span class="time">{{ item.create_time }}</span>
           </div>

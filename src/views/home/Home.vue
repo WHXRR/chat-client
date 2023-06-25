@@ -2,18 +2,15 @@
 import ChatHeader from "@/views/header/ChatHeader.vue";
 import ChatFooter from "@/views/footer/ChatFooter.vue";
 import ChatMain from "@/views/main/ChatMain.vue";
-import { ref, nextTick, provide } from "vue";
+import { ref, nextTick, watch } from "vue";
 import { useStore } from "@/store/user";
-import { io } from "socket.io-client";
 import { ElNotification } from "element-plus";
-import { socketURL } from "@/axios/base";
 import { debounce } from "@/utils/help";
+import socket from "@/socket";
 
 const store = useStore();
 const message = ref("");
 
-const socket = io(socketURL);
-provide("socket", socket);
 // 连接成功
 socket.on("connect", () => {
   // 通知服务器更新在线人数
@@ -75,7 +72,6 @@ socket.on("message", ({ type, status, data }) => {
   }
 });
 // 发送消息
-const date = new Date();
 const send = () => {
   socket.emit("send", {
     message: message.value,
@@ -119,6 +115,34 @@ socket.on("back", ({ message, total }) => {
     messageContainer.value.scrollTop =
       messageContainer.value.scrollHeight - messageContainer.value.clientHeight;
   });
+});
+
+// 获取聊天记录中用户信息
+const messagesUser = ref([]);
+watch(
+  () => messageContent.value,
+  (newValue) => {
+    messagesUser.value = newValue.reduce((pre, next) => {
+      pre[next.sender_id] = {
+        avatar: next.avatar,
+        username: next.username,
+        identity: next.identity,
+      };
+      return pre;
+    }, {});
+  },
+  { deep: true }
+);
+// 用户信息有变动时更新界面
+socket.on("somebodyUpdateInfo", (data) => {
+  messagesUser.value[data.id] = {
+    avatar: data.avatar,
+    username: data.username,
+    identity: data.identity,
+  };
+  if (data.id === store.user.id) {
+    store.getUserInfo();
+  }
 });
 
 // 被踢出群聊
@@ -214,6 +238,7 @@ const kickOutGroupChat = (id) => {
     <div class="main" ref="messageContainer" @scroll="scrollToTop">
       <ChatMain
         :messageContent="messageContent"
+        :messagesUser="messagesUser"
         @loadedImg="loadedImg"
         @cuePeople="cuePeople"
         @kickOutGroupChat="kickOutGroupChat"

@@ -1,7 +1,8 @@
 <script setup>
 import baseURL from "@/axios/base";
 import api from "@/api";
-import { computed, inject } from "vue";
+import socket from "@/socket";
+import { computed } from "vue";
 import { useStore } from "@/store/user";
 import { systemStore } from "@/store/system";
 import { storeToRefs } from "pinia";
@@ -9,7 +10,6 @@ import { ElNotification } from "element-plus";
 import { setCssVar } from "@/hooks/useSwitchTheme";
 import { Sunny, Moon } from "@element-plus/icons-vue";
 
-const socket = inject("socket");
 const store = useStore();
 const sysStore = systemStore();
 const { user } = storeToRefs(store);
@@ -58,7 +58,9 @@ const saveInfo = () => {
     })
     .then((res) => {
       if (res.status) {
-        store.getUserInfo();
+        socket.emit("updateUserInfo", {
+          id: store.user.id,
+        });
       }
     });
 };
