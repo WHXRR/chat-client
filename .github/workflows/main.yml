@@ -30,3 +30,4 @@ jobs:
             npm install
             npm run build
             sudo service nginx restart
+            pm2 restart app
