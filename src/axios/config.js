@@ -43,7 +43,7 @@ function httpErrorStatusHandle(error, store) {
       case 408: message = '请求超时！'; break;
       case 409: message = '系统已存在相同数据！'; break;
       case 500:
-        store.clearToken()
+        // store.clearToken()
         message = '服务器内部错误！';
         break;
       case 501: message = '服务未实现！'; break;

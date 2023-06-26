@@ -6,6 +6,7 @@ import { uploadStore } from "@/store/upload";
 import { throttle } from "@/utils/help";
 import useClickArea from "@/hooks/useClickArea";
 import Emoji from "@/components/Emoji.vue";
+import UploadEmoji from "@/components/UploadEmoji.vue";
 import api from "@/api";
 
 const store = useStore();
@@ -187,6 +188,14 @@ const deletePasteImg = () => {
   fileList.value = [];
   pasteImg.value = [];
 };
+
+const sendEmoji = (data) => {
+  emit("sendImage", {
+    fileName: data.emoji_name,
+    message: data.emoji_path,
+    type: "image",
+  });
+};
 </script>
 <template>
   <div class="chat-footer">
@@ -194,15 +203,9 @@ const deletePasteImg = () => {
       <Emoji @emojiClick="handleEmojiClick" v-show="showEmoji" />
     </div>
     <div class="tools">
-      <el-icon
-        class="tool-item emoji-icon"
-        :size="20"
-        @click="showEmoji = !showEmoji"
-      >
-        <Star />
-      </el-icon>
+      <div class="tool-item emoji-icon" @click="showEmoji = !showEmoji">😃</div>
       <el-upload
-        class="upload-file"
+        class="upload-file tool-item"
         name="file"
         v-if="['root', 'admin'].includes(store.user.identity)"
         :on-success="handleSuccess"
@@ -214,8 +217,9 @@ const deletePasteImg = () => {
           Authorization: store.token,
         }"
       >
-        <el-icon class="tool-item emoji-icon" :size="20"><Folder /></el-icon>
+        <el-icon :size="20"><Folder /></el-icon>
       </el-upload>
+      <UploadEmoji @sendEmoji="sendEmoji" />
     </div>
     <textarea
       v-focus
@@ -251,10 +255,17 @@ const deletePasteImg = () => {
   }
   .tools {
     display: flex;
+    align-items: center;
     margin-bottom: 10px;
     .tool-item {
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin-right: 10px;
+    }
+    .upload-file {
+      display: flex;
     }
   }
   .send-ipt {
@@ -264,7 +275,7 @@ const deletePasteImg = () => {
     outline: none;
     resize: none;
     color: var(--font-color);
-    font-size: 14px;
+    font-size: 13px;
     box-sizing: border-box;
     background-color: var(--background-color);
   }

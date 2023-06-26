@@ -7,7 +7,8 @@ export const useStore = defineStore('user', {
     return {
       user: {},
       token: localStorage.getItem('token') || '',
-      onlineUsers: []
+      onlineUsers: [],
+      userEmojis: []
     }
   },
   actions: {
@@ -23,6 +24,13 @@ export const useStore = defineStore('user', {
       api.getUserInfo().then(res => {
         this.user = { ...res.data }
       })
+    },
+    getUserEmoji() {
+      api.getUserEmoji().then((res) => {
+        if (res.status) {
+          this.userEmojis = res.data;
+        }
+      });
     }
   }
 })

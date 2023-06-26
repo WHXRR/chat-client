@@ -1,6 +1,7 @@
 <script setup>
 import { useStore } from "@/store/user";
 import { uploadStore } from "@/store/upload";
+import { ElNotification } from "element-plus";
 import UploadLoading from "@/components/UploadLoading.vue";
 import api from "@/api";
 import socket from "@/socket";
@@ -39,6 +40,29 @@ const rootPermission = (id, permission) => {
 
 const kickOutGroupChat = (id) => {
   emit("kickOutGroupChat", id);
+};
+
+const collectEmoji = (data) => {
+  api
+    .collectEmoji({
+      emoji_name: data.fileName,
+      emoji_path: data.message,
+    })
+    .then((res) => {
+      if (res.status) {
+        store.getUserEmoji();
+        ElNotification({
+          message: `收藏成功~`,
+          type: "success",
+        });
+      }
+    })
+    .catch((err) => {
+      ElNotification({
+        message: err,
+        type: "warning",
+      });
+    });
 };
 </script>
 <template>
@@ -125,6 +149,7 @@ const kickOutGroupChat = (id) => {
           </div>
         </div>
         <div class="msg-right">
+          <!-- 发送者信息 -->
           <div
             class="user-name"
             @click="clickName(messagesUser[item.sender_id]?.username)"
@@ -139,10 +164,11 @@ const kickOutGroupChat = (id) => {
             >
             <span class="time">{{ item.create_time }}</span>
           </div>
+          <!-- 聊天内容 -->
           <div v-if="item.type === 'text'" class="msg-content">
             {{ item.message }}
           </div>
-          <div v-else-if="item.type === 'image'" style="margin-top: 5px">
+          <div v-else-if="item.type === 'image'" class="image-container">
             <el-image
               class="img-content"
               :src="item.message"
@@ -163,6 +189,11 @@ const kickOutGroupChat = (id) => {
                 </div>
               </template>
             </el-image>
+            <div class="image-icon">
+              <el-icon :size="20" @click="collectEmoji(item)"
+                ><CirclePlus
+              /></el-icon>
+            </div>
           </div>
           <div v-else class="file-content" @click="downLoadFile(item.message)">
             <div style="margin-right: 20px">{{ item.fileName }}</div>
@@ -252,6 +283,21 @@ const kickOutGroupChat = (id) => {
       font-size: 14px;
       word-break: break-all;
       background-color: var(--message-content-background-color);
+    }
+    .image-container {
+      position: relative;
+      margin-top: 5px;
+      .image-icon {
+        cursor: pointer;
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        opacity: 0;
+        transition: all 0.3s;
+      }
+      &:hover .image-icon {
+        opacity: 1;
+      }
     }
     .img-content {
       max-width: 20vw;
