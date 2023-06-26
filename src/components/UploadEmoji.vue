@@ -22,7 +22,6 @@ const beforeFileUpload = (rawFile) => {
 };
 
 const uploadFile = (file) => {
-  uploadLoading.value = true;
   // 设置文件对象
   const formData = new FormData();
   formData.append("image", file.file);
