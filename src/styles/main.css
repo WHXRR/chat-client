@@ -57,6 +57,7 @@
 .emoticon-pack-item {
   position: relative;
   cursor: pointer;
+  width: 80px;
   height: 80px;
   display: flex;
   align-items: center;
