@@ -1,11 +1,13 @@
 <script setup>
 import api from "@/api";
+import useClickArea from "@/hooks/useClickArea";
 import { ElNotification } from "element-plus";
 import { useStore } from "@/store/user";
 import { systemStore } from "@/store/system";
+import { ref } from "vue";
 
 const store = useStore();
-const sysStore = systemStore()
+const sysStore = systemStore();
 store.getUserEmoji();
 const emit = defineEmits(["sendEmoji"]);
 
@@ -32,7 +34,7 @@ const uploadFile = (file) => {
     })
     .catch((err) => {
       handleError(err, file);
-    })
+    });
 };
 
 const handleSuccess = (res) => {
@@ -52,6 +54,7 @@ const handleError = (error, file) => {
 };
 
 const sendEmoji = (data) => {
+  emojiVisible.value = false;
   emit("sendEmoji", data);
 };
 
@@ -62,12 +65,29 @@ const deleteEmoji = (data) => {
     }
   });
 };
+
+const emojiVisible = ref(false);
+window.addEventListener("click", (e) => {
+  const clickArea = useClickArea("custom-emoji-container", e.target);
+  const iconArea = useClickArea("emoji-icon2", e.target);
+  if (iconArea) return;
+  if (!clickArea) {
+    emojiVisible.value = false;
+  }
+});
 </script>
 <template>
   <div class="tool-item">
-    <el-popover placement="top" width="auto" trigger="click" :hide-after="0">
+    <el-popover
+      popper-class="custom-emoji-container"
+      placement="top"
+      width="auto"
+      trigger="click"
+      :hide-after="0"
+      :visible="emojiVisible"
+    >
       <template #reference>
-        <el-icon :size="20">
+        <el-icon class="emoji-icon2" :size="20" @click="emojiVisible = !emojiVisible">
           <Star />
         </el-icon>
       </template>
@@ -76,13 +96,13 @@ const deleteEmoji = (data) => {
           class="emoticon-pack-item"
           v-for="item in store.userEmojis"
           :key="item.id"
+          @click="sendEmoji(item)"
         >
-          <img
-            :src="item.emoji_path"
-            :alt="item.emoji_name"
-            @click="sendEmoji(item)"
-          />
-          <el-icon class="delete-icon" :size="18" @click="deleteEmoji(item)"
+          <img :src="item.emoji_path" :alt="item.emoji_name" />
+          <el-icon
+            class="delete-icon"
+            :size="18"
+            @click.stop="deleteEmoji(item)"
             ><CircleCloseFilled
           /></el-icon>
         </div>

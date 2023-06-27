@@ -102,7 +102,7 @@ const collectEmoji = (data) => {
                 class="user-menu-item"
                 v-if="
                   !['admin', 'root'].includes(
-                    messagesUser[item.id]?.identity
+                    messagesUser[item.sender_id]?.identity
                   ) && store.user.identity === 'root'
                 "
                 @click="rootPermission(item.sender_id, 'admin')"
@@ -113,7 +113,7 @@ const collectEmoji = (data) => {
                 class="user-menu-item"
                 v-if="
                   !['tourist', 'root'].includes(
-                    messagesUser[item.id]?.identity
+                    messagesUser[item.sender_id]?.identity
                   ) && store.user.identity === 'root'
                 "
                 @click="rootPermission(item.sender_id, 'tourist')"
@@ -123,9 +123,9 @@ const collectEmoji = (data) => {
               <div
                 class="user-menu-item"
                 v-if="
-                  !['root'].includes(messagesUser[item.id]?.identity) &&
+                  !['root'].includes(messagesUser[item.sender_id]?.identity) &&
                   ['root', 'admin'].includes(store.user.identity) &&
-                  item.sender_id !== store.user.id
+                  item.sender_id !== store.user.sender_id
                 "
                 @click="kickOutGroupChat(item.sender_id, item.username)"
               >
@@ -290,10 +290,11 @@ const collectEmoji = (data) => {
       .image-icon {
         cursor: pointer;
         position: absolute;
-        right: 10px;
-        bottom: 10px;
+        right: 0;
+        bottom: 0;
         opacity: 0;
         transition: all 0.3s;
+        transform: translateX(120%);
       }
       &:hover .image-icon {
         opacity: 1;

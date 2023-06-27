@@ -183,6 +183,10 @@ socket.on("kickOut", ({ status, username }) => {
   }
 });
 
+socket.on("reload", () => {
+  location.reload()
+})
+
 // 断开连接
 socket.on("disconnect", () => {
   ElNotification({

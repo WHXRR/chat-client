@@ -219,7 +219,7 @@ const sendEmoji = (data) => {
       >
         <el-icon :size="20"><Folder /></el-icon>
       </el-upload>
-      <UploadEmoji @sendEmoji="sendEmoji" />
+      <UploadEmoji v-if="['root', 'admin'].includes(store.user.identity)" @sendEmoji="sendEmoji" />
     </div>
     <textarea
       v-focus
