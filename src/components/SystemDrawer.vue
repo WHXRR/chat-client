@@ -127,6 +127,12 @@ const exit = () => {
         >
       </div>
       <div class="menu">
+        <div>
+          <a href="https://github.com/WHXRR/chat-client" target="_black" class="menu-item">
+            <div>前端git地址</div>
+            <el-icon :size="20"><Link /></el-icon>
+          </a>
+        </div>
         <div class="menu-item">
           <div>主题切换</div>
           <div>
