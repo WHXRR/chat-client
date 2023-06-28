@@ -2,7 +2,7 @@
 import ChatHeader from "@/views/header/ChatHeader.vue";
 import ChatFooter from "@/views/footer/ChatFooter.vue";
 import ChatMain from "@/views/main/ChatMain.vue";
-import { ref, nextTick, watch } from "vue";
+import { ref, nextTick } from "vue";
 import { useStore } from "@/store/user";
 import { ElNotification } from "element-plus";
 import { debounce } from "@/utils/help";
@@ -118,30 +118,9 @@ socket.on("back", ({ message, total }) => {
   });
 });
 
-// 获取聊天记录中用户信息
-const messagesUser = ref([]);
-watch(
-  () => messageContent.value,
-  (newValue) => {
-    const distinctObj = newValue.reduce((pre, next) => {
-      if (!pre[next.sender_id]) {
-        pre[next.sender_id] = {
-          avatar: next.avatar,
-          username: next.username,
-          identity: next.identity,
-        };
-      }
-      return pre;
-    }, {});
-    Object.keys(distinctObj).forEach((key) => {
-      messagesUser.value[key] = distinctObj[key];
-    });
-  },
-  { deep: true }
-);
 // 用户信息有变动时更新界面
 socket.on("somebodyUpdateInfo", (data) => {
-  messagesUser.value[data.id] = {
+  store.allUsers[data.id] = {
     avatar: data.avatar,
     username: data.username,
     identity: data.identity,
@@ -149,15 +128,6 @@ socket.on("somebodyUpdateInfo", (data) => {
   if (data.id === store.user.id) {
     store.getUserInfo();
   }
-});
-socket.on("allOnlineUsers", (data) => {
-  data.forEach((item) => {
-    messagesUser.value[item.id] = {
-      avatar: item.avatar,
-      username: item.username,
-      identity: item.identity,
-    };
-  });
 });
 
 // 被踢出群聊
@@ -250,18 +220,17 @@ const cuePeople = (name) => {
 const kickOutGroupChat = (id) => {
   socket.emit("kickOutGroupChat", { id, adminInfo: store.user });
 };
+
+socket.on("registerSuccess", () => {
+  store.getAllUserInfo()
+})
 </script>
 <template>
   <div class="chat-container">
-    <ChatHeader
-      :allPeoples="allPeoples"
-      :messagesUser="messagesUser"
-      @kickOutGroupChat="kickOutGroupChat"
-    />
+    <ChatHeader :allPeoples="allPeoples" @kickOutGroupChat="kickOutGroupChat" />
     <div class="main" ref="messageContainer" @scroll="scrollToTop">
       <ChatMain
         :messageContent="messageContent"
-        :messagesUser="messagesUser"
         @loadedImg="loadedImg"
         @cuePeople="cuePeople"
         @kickOutGroupChat="kickOutGroupChat"

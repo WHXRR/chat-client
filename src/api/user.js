@@ -5,6 +5,11 @@ export const getUserInfo = () => api({
   method: 'post'
 })
 
+export const getAllUserInfo = () => api({
+  url: '/all/userInfo',
+  method: 'post'
+})
+
 export const updateUserInfo = (data) => api({
   url: '/update/userInfo',
   method: 'post',

@@ -4,16 +4,17 @@ import api from "@/api";
 import socket from "@/socket";
 import { ref } from "vue";
 import { useStore } from "@/store/user";
+import { storeToRefs } from 'pinia'
 
 const emit = defineEmits(["kickOutGroupChat"]);
 
 const store = useStore();
+const { allUsers } = storeToRefs(store)
 const props = defineProps({
   allPeoples: {
     type: Number,
     default: 0,
   },
-  messagesUser: Object,
 });
 
 const registerPeople = ref(0);
@@ -64,12 +65,12 @@ const kickOutGroupChat = (id) => {
                 <div style="cursor: pointer">
                   <el-avatar
                     class="avatar"
-                    :src="messagesUser[item.id]?.avatar"
+                    :src="allUsers[item.id]?.avatar"
                   >
                     <el-icon :size="20"><Pear /></el-icon>
                   </el-avatar>
                   <div class="username">
-                    {{ messagesUser[item.id]?.username }}
+                    {{ allUsers[item.id]?.username }}
                   </div>
                 </div>
               </template>
@@ -78,7 +79,7 @@ const kickOutGroupChat = (id) => {
                   class="user-menu-item"
                   v-if="
                     !['admin', 'root'].includes(
-                      messagesUser[item.id]?.identity
+                      allUsers[item.id]?.identity
                     ) && store.user.identity === 'root'
                   "
                   @click="rootPermission(item.id, 'admin')"
@@ -89,7 +90,7 @@ const kickOutGroupChat = (id) => {
                   class="user-menu-item"
                   v-if="
                     !['tourist', 'root'].includes(
-                      messagesUser[item.id]?.identity
+                      allUsers[item.id]?.identity
                     ) && store.user.identity === 'root'
                   "
                   @click="rootPermission(item.id, 'tourist')"
@@ -99,7 +100,7 @@ const kickOutGroupChat = (id) => {
                 <div
                   class="user-menu-item"
                   v-if="
-                    messagesUser[item.id]?.identity !== 'root' &&
+                    allUsers[item.id]?.identity !== 'root' &&
                     ['root', 'admin'].includes(store.user.identity) &&
                     item.id !== store.user.id
                   "

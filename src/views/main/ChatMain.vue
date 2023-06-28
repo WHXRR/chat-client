@@ -2,6 +2,7 @@
 import { useStore } from "@/store/user";
 import { uploadStore } from "@/store/upload";
 import { ElNotification } from "element-plus";
+import { storeToRefs } from "pinia";
 import UploadLoading from "@/components/UploadLoading.vue";
 import api from "@/api";
 import socket from "@/socket";
@@ -9,10 +10,10 @@ import socket from "@/socket";
 const emit = defineEmits(["loadedImg", "cuePeople", "kickOutGroupChat"]);
 const date = new Date();
 const store = useStore();
+const { allUsers } = storeToRefs(store);
 const useUploadStore = uploadStore();
 const props = defineProps({
   messageContent: Array,
-  messagesUser: Object,
 });
 
 const downLoadFile = (url) => {
@@ -77,7 +78,7 @@ const collectEmoji = (data) => {
         <div>
           <el-avatar
             class="avatar"
-            :src="messagesUser[item.sender_id]?.avatar"
+            :src="allUsers[item.sender_id]?.avatar"
             v-if="item.sender_id === store.user.id"
           >
             <el-icon :size="30"><Pear /></el-icon>
@@ -90,10 +91,7 @@ const collectEmoji = (data) => {
             popper-class="menu-popper"
           >
             <template #reference>
-              <el-avatar
-                class="avatar"
-                :src="messagesUser[item.sender_id]?.avatar"
-              >
+              <el-avatar class="avatar" :src="allUsers[item.sender_id]?.avatar">
                 <el-icon :size="30"><Pear /></el-icon>
               </el-avatar>
             </template>
@@ -102,7 +100,7 @@ const collectEmoji = (data) => {
                 class="user-menu-item"
                 v-if="
                   !['admin', 'root'].includes(
-                    messagesUser[item.sender_id]?.identity
+                    allUsers[item.sender_id]?.identity
                   ) && store.user.identity === 'root'
                 "
                 @click="rootPermission(item.sender_id, 'admin')"
@@ -113,7 +111,7 @@ const collectEmoji = (data) => {
                 class="user-menu-item"
                 v-if="
                   !['tourist', 'root'].includes(
-                    messagesUser[item.sender_id]?.identity
+                    allUsers[item.sender_id]?.identity
                   ) && store.user.identity === 'root'
                 "
                 @click="rootPermission(item.sender_id, 'tourist')"
@@ -123,7 +121,7 @@ const collectEmoji = (data) => {
               <div
                 class="user-menu-item"
                 v-if="
-                  !['root'].includes(messagesUser[item.sender_id]?.identity) &&
+                  !['root'].includes(allUsers[item.sender_id]?.identity) &&
                   ['root', 'admin'].includes(store.user.identity) &&
                   item.sender_id !== store.user.sender_id
                 "
@@ -137,14 +135,11 @@ const collectEmoji = (data) => {
           <!-- 标签 -->
           <div
             class="tag"
-            v-if="messagesUser[item.sender_id]?.identity === 'admin'"
+            v-if="allUsers[item.sender_id]?.identity === 'admin'"
           >
             管理员
           </div>
-          <div
-            class="tag"
-            v-if="messagesUser[item.sender_id]?.identity === 'root'"
-          >
+          <div class="tag" v-if="allUsers[item.sender_id]?.identity === 'root'">
             root
           </div>
         </div>
@@ -152,15 +147,15 @@ const collectEmoji = (data) => {
           <!-- 发送者信息 -->
           <div
             class="user-name"
-            @click="clickName(messagesUser[item.sender_id]?.username)"
+            @click="clickName(allUsers[item.sender_id]?.username)"
           >
             <span
               :class="
-                ['root'].includes(messagesUser[item.sender_id]?.identity)
+                ['root'].includes(allUsers[item.sender_id]?.identity)
                   ? 'changing-text'
                   : ''
               "
-              >{{ messagesUser[item.sender_id]?.username }}</span
+              >{{ allUsers[item.sender_id]?.username }}</span
             >
             <span class="time">{{ item.create_time }}</span>
           </div>

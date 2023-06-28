@@ -8,6 +8,7 @@ export const useStore = defineStore('user', {
       user: {},
       token: localStorage.getItem('token') || '',
       onlineUsers: [],
+      allUsers: [],
       userEmojis: []
     }
   },
@@ -23,6 +24,11 @@ export const useStore = defineStore('user', {
     getUserInfo() {
       api.getUserInfo().then(res => {
         this.user = { ...res.data }
+      })
+    },
+    getAllUserInfo() {
+      api.getAllUserInfo().then(res => {
+        this.allUsers = { ...res.data }
       })
     },
     getUserEmoji() {

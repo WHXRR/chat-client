@@ -143,6 +143,7 @@ const login = async () => {
       justify-content: space-between;
       .captcha {
         cursor: pointer;
+        height: 50px;
         margin-left: 20px;
         background-color: var(--message-content-background-color);
       }

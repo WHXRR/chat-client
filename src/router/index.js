@@ -27,6 +27,8 @@ router.beforeEach(async (to, from, next) => {
       let res = await api.getUserInfo()
       store.user = { ...res.data }
     }
+    let res1 = await api.getAllUserInfo()
+    store.allUsers = { ...res1.data }
     next()
   } else {
     next()
