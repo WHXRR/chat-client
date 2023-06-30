@@ -189,5 +189,10 @@ const login = async () => {
       color: #abb2bf;
     }
   }
+  @media (max-width: 767px) {
+    .login-box {
+      width: 70%;
+    }
+  }
 }
 </style>

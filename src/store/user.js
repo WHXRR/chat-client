@@ -8,7 +8,7 @@ export const useStore = defineStore('user', {
       user: {},
       token: localStorage.getItem('token') || '',
       onlineUsers: [],
-      allUsers: [],
+      allUsers: {},
       userEmojis: []
     }
   },

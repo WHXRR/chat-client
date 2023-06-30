@@ -17,14 +17,6 @@ const props = defineProps({
   },
 });
 
-const registerPeople = ref(0);
-const getAllRegisterPeople = () => {
-  api.getAllRegisterPeople().then((res) => {
-    registerPeople.value = res.data.total;
-  });
-};
-getAllRegisterPeople();
-
 const open = ref(false);
 
 const showOnlineContainer = ref(false);
@@ -45,7 +37,7 @@ const kickOutGroupChat = (id) => {
 <template>
   <div class="header">
     <div class="chat-header">
-      <div>相亲相爱一家人({{ allPeoples }}/{{ registerPeople }})</div>
+      <div>相亲相爱一家人({{ allPeoples }}/{{ Object.keys(allUsers).length }})</div>
       <div class="icon" @click="open = true">
         <el-icon size="20">
           <More />
