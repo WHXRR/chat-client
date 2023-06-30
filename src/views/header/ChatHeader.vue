@@ -4,12 +4,12 @@ import api from "@/api";
 import socket from "@/socket";
 import { ref } from "vue";
 import { useStore } from "@/store/user";
-import { storeToRefs } from 'pinia'
+import { storeToRefs } from "pinia";
 
 const emit = defineEmits(["kickOutGroupChat"]);
 
 const store = useStore();
-const { allUsers } = storeToRefs(store)
+const { allUsers } = storeToRefs(store);
 const props = defineProps({
   allPeoples: {
     type: Number,
@@ -37,11 +37,11 @@ const kickOutGroupChat = (id) => {
 <template>
   <div class="header">
     <div class="chat-header">
-      <div>相亲相爱一家人({{ allPeoples }}/{{ Object.keys(allUsers).length }})</div>
+      <div>
+        相亲相爱一家人({{ allPeoples }}/{{ Object.keys(allUsers).length }})
+      </div>
       <div class="icon" @click="open = true">
-        <el-icon size="20">
-          <More />
-        </el-icon>
+        <el-icon size="20"><Setting /></el-icon>
       </div>
     </div>
     <div class="online-container">
@@ -55,10 +55,7 @@ const kickOutGroupChat = (id) => {
             >
               <template #reference>
                 <div style="cursor: pointer">
-                  <el-avatar
-                    class="avatar"
-                    :src="allUsers[item.id]?.avatar"
-                  >
+                  <el-avatar class="avatar" :src="allUsers[item.id]?.avatar">
                     <el-icon :size="20"><Pear /></el-icon>
                   </el-avatar>
                   <div class="username">
@@ -70,9 +67,8 @@ const kickOutGroupChat = (id) => {
                 <div
                   class="user-menu-item"
                   v-if="
-                    !['admin', 'root'].includes(
-                      allUsers[item.id]?.identity
-                    ) && store.user.identity === 'root'
+                    !['admin', 'root'].includes(allUsers[item.id]?.identity) &&
+                    store.user.identity === 'root'
                   "
                   @click="rootPermission(item.id, 'admin')"
                 >
@@ -143,6 +139,7 @@ const kickOutGroupChat = (id) => {
   border-bottom: 1px solid var(--border-color);
   .icon {
     cursor: pointer;
+    display: flex;
   }
 }
 .online-container {

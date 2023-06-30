@@ -1,0 +1,184 @@
+[
+  {
+    "title": "娱乐",
+    "data": [
+      {
+        "link": "https://gartic.io/",
+        "name": "gartic.io （你画我猜）"
+      }
+    ]
+  },
+  {
+    "title": "影视",
+    "data": [
+      {
+        "link": "https://www.agedm.tv/",
+        "name": "AGE动漫"
+      },
+      {
+        "link": "https://www.mcdm8.com/",
+        "name": "樱花动漫"
+      },
+      {
+        "link": "https://www.nyafun.net/",
+        "name": "NyaFun"
+      },
+      {
+        "link": "https://www.5dm.app/",
+        "name": "D站"
+      },
+      {
+        "link": "https://www.panyoubbs.com/",
+        "name": "阿里云盘资源库"
+      },
+      {
+        "link": "https://www.wangfei.tv/",
+        "name": "网飞tv"
+      }
+    ]
+  },
+  {
+    "title": "CSS",
+    "data": [
+      {
+        "link": "https://colorhunt.co/",
+        "name": "Color Palettes for Designers and Artists"
+      },
+      {
+        "link": "https://icomoon.io/",
+        "name": "IcoMoon"
+      },
+      {
+        "link": "https://www.iconfont.cn/",
+        "name": "阿里巴巴矢量图标库"
+      },
+      {
+        "link": "https://flatuicolors.com/palette/defo",
+        "name": "Palettes"
+      },
+      {
+        "link": "https://unsplash.com/de",
+        "name": "图片库"
+      },
+      {
+        "link": "https://wweb.dev/resources/css-separator-generator",
+        "name": "css实现各种边框"
+      },
+      {
+        "link": "https://9elements.github.io/fancy-border-radius/#87.12.10.89--.",
+        "name": "调试css边框圆角"
+      },
+      {
+        "link": "https://mycolor.space/gradient3",
+        "name": "调试css渐变"
+      },
+      {
+        "link": "https://neumorphism.io/#1d6690",
+        "name": "调试css阴影"
+      },
+      {
+        "link": "https://cssgrid-generator.netlify.app/",
+        "name": "调试css grid布局"
+      },
+      {
+        "link": "https://www.eggradients.com/category/orange-gradient",
+        "name": "调试css渐变"
+      },
+      {
+        "link": "https://www.bitbug.net/",
+        "name": "制作ico"
+      }
+    ]
+  },
+  {
+    "title": "技术",
+    "data": [
+      {
+        "link": "https://es6.ruanyifeng.com/#docs",
+        "name": "阮一峰 es6"
+      },
+      {
+        "link": "https://programmercarl.com/%E6%95%B0%E7%BB%84%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80.html#%E6%95%B0%E7%BB%84%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80",
+        "name": "代码随想录"
+      },
+      {
+        "link": "https://fe.ecool.fun/",
+        "name": "面试刷题"
+      },
+      {
+        "link": "http://ts.xcatliu.com/introduction/what-is-typescript.html",
+        "name": "typescript文档"
+      },
+      {
+        "link": "https://flutter.cn/docs",
+        "name": "flutter文档"
+      },
+      {
+        "link": "https://webglfundamentals.org/webgl/lessons/zh_cn/webgl-fundamentals.html",
+        "name": "webgl"
+      },
+      {
+        "link": "https://kaisery.github.io/trpl-zh-cn/title-page.html",
+        "name": "rust文档"
+      }
+    ]
+  },
+  {
+    "title": "摸鱼",
+    "data": [
+      {
+        "link": "https://juejin.cn/",
+        "name": "掘金"
+      },
+      {
+        "link": "https://www.zhihu.com/",
+        "name": "知乎"
+      },
+      {
+        "link": "https://www.douban.com/",
+        "name": "豆瓣"
+      },
+      {
+        "link": "https://www.hupu.com/",
+        "name": "虎扑"
+      },
+      {
+        "link": "https://www.v2ex.com/",
+        "name": "v2ex"
+      },
+      {
+        "link": "https://www.juxiaoshuo.net/",
+        "name": "聚小说"
+      }
+    ]
+  },
+  {
+    "title": "其他",
+    "data": [
+      {
+        "link": "https://www.cizhixin.com/czx/",
+        "name": "辞职信生成器"
+      },
+      {
+        "link": "https://mail.td/zh/",
+        "name": "临时邮箱"
+      },
+      {
+        "link": "https://www.wondercv.com/auth-signin/?type=login",
+        "name": "超级简历，简历制作"
+      },
+      {
+        "link": "https://xn--4gq62f52gdss.com/#/login",
+        "name": "一元机场"
+      },
+      {
+        "link": "https://chat.openai.com/",
+        "name": "chatgpt"
+      },
+      {
+        "link": "https://online.rapidresizer.com/photograph-to-pattern.php",
+        "name": "在线生成图片线稿"
+      }
+    ]
+  }
+]

@@ -2,7 +2,8 @@
 import baseURL from "@/axios/base";
 import api from "@/api";
 import socket from "@/socket";
-import { computed } from "vue";
+import WebsiteNavigation from "@/components/WebsiteNavigation.vue"
+import { computed, ref } from "vue";
 import { useStore } from "@/store/user";
 import { systemStore } from "@/store/system";
 import { storeToRefs } from "pinia";
@@ -79,6 +80,8 @@ const exit = () => {
   // 主动断开连接时需向服务端发送消息，将该用户对应的socket对象设为null
   socket.emit("disconnectChat", { id: store.user.id });
 };
+
+const showWebNav = ref(false)
 </script>
 <template>
   <div>
@@ -127,11 +130,17 @@ const exit = () => {
         >
       </div>
       <div class="menu">
-        <div>
-          <a href="https://github.com/WHXRR/chat-client" target="_black" class="menu-item">
-            <div>前端git地址</div>
-            <el-icon :size="20"><Link /></el-icon>
-          </a>
+        <a
+          href="https://github.com/WHXRR/chat-client"
+          target="_black"
+          class="menu-item"
+        >
+          <div>前端git地址</div>
+          <el-icon :size="20"><Link /></el-icon>
+        </a>
+        <div class="menu-item" @click="showWebNav = true">
+          <div>好东西</div>
+          <el-icon :size="20"><View /></el-icon>
         </div>
         <div class="menu-item">
           <div>主题切换</div>
@@ -159,6 +168,7 @@ const exit = () => {
         </div>
       </div>
     </el-drawer>
+    <WebsiteNavigation v-model="showWebNav" />
   </div>
 </template>
 <style lang="scss" scoped>
