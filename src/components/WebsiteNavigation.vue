@@ -26,11 +26,11 @@ const handleClose = () => {
         <div class="nav-title">{{ item.title }}</div>
         <div class="nav-content">
           <a
-            :href="item.link"
-            target="_black"
-            class="nav-item"
             v-for="(ele, idx2) in item.data"
             :key="idx2"
+            :href="ele.link"
+            target="_black"
+            class="nav-item"
           >
             {{ ele.name }}
           </a>
