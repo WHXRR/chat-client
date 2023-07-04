@@ -54,7 +54,7 @@ const kickOutGroupChat = (id) => {
               popper-class="menu-popper"
             >
               <template #reference>
-                <div style="cursor: pointer">
+                <div style="cursor: pointer" :title="allUsers[item.id]?.username">
                   <el-avatar class="avatar" :src="allUsers[item.id]?.avatar">
                     <el-icon :size="20"><Pear /></el-icon>
                   </el-avatar>
