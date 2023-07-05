@@ -17,6 +17,7 @@ const props = defineProps({
 const emit = defineEmits(["send", "update:modelValue", "sendImage"]);
 
 const fileList = ref([]);
+const warningNum = ref(0);
 const send = () => {
   if (store.user.identity === "tourist" && message.value.length > 50) {
     return ElNotification({
@@ -28,17 +29,17 @@ const send = () => {
     uploadFile({ file: fileList.value[0] });
   }
   if (!message.value) return;
+  warningNum.value = 0;
   emit("send");
 };
-let warningNum = 0;
 const throttleSend = throttle(send, 2000, () => {
   ElNotification({
     message: "再刷屏就把你封了",
     type: "error",
   });
-  warningNum++;
-  if (warningNum >= 6) {
-    warningNum = 0;
+  warningNum.value++;
+  if (warningNum.value >= 6) {
+    warningNum.value = 0;
     store.clearToken();
   }
 });
@@ -219,7 +220,10 @@ const sendEmoji = (data) => {
       >
         <el-icon :size="20"><Folder /></el-icon>
       </el-upload>
-      <UploadEmoji v-if="['root', 'admin'].includes(store.user.identity)" @sendEmoji="sendEmoji" />
+      <UploadEmoji
+        v-if="['root', 'admin'].includes(store.user.identity)"
+        @sendEmoji="sendEmoji"
+      />
     </div>
     <textarea
       v-focus
