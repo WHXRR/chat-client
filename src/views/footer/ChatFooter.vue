@@ -32,7 +32,7 @@ const send = () => {
   warningNum.value = 0;
   emit("send");
 };
-const throttleSend = throttle(send, 2000, () => {
+const throttleSend = throttle(send, 500, () => {
   ElNotification({
     message: "再刷屏就把你封了",
     type: "error",
