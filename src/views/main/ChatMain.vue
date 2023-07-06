@@ -190,6 +190,9 @@ const collectEmoji = (data) => {
               /></el-icon>
             </div>
           </div>
+          <div v-else-if="item.type === 'video'" class="image-container">
+            <video :src="item.message" controls style="max-height: 600px; border-radius: 5px"></video>
+          </div>
           <div v-else class="file-content" @click="downLoadFile(item.message)">
             <div style="margin-right: 20px">{{ item.fileName }}</div>
             <el-icon :size="50"><Folder /></el-icon>

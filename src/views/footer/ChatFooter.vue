@@ -132,6 +132,7 @@ const beforeFileUpload = (rawFile) => {
 };
 const handleSuccess = (res, file) => {
   if (!res.status) return;
+  console.log({ file });
   if (file.file.type.includes("image/")) {
     fileList.value = [];
     pasteImg.value = [];
@@ -139,6 +140,12 @@ const handleSuccess = (res, file) => {
       fileName: file.file.name,
       message: res.data.url,
       type: "image",
+    });
+  } else if (file.file.type.includes("video/mp4")) {
+    return emit("sendFile", {
+      fileName: file.file.name,
+      message: res.data.url,
+      type: "video",
     });
   } else {
     return emit("sendFile", {
