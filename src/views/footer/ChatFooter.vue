@@ -120,10 +120,10 @@ const uploadFile = (file) => {
     });
 };
 const beforeFileUpload = (rawFile) => {
-  if (rawFile.size / 1024 / 1024 > 2) {
+  if (rawFile.size / 1024 / 1024 > 50) {
     ElNotification({
       title: "Warning",
-      message: "上传的内容不能超过2MB!",
+      message: "上传的内容不能超过50MB!",
       type: "warning",
     });
     return false;
