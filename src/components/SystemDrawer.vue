@@ -166,7 +166,7 @@ const token = store.token.split(" ")[1];
         </div>
         <div v-permission="['root']">
           <a
-            :href="`http://localhost:5173?token=${token}`"
+            :href="`http://47.97.159.103:3336?token=${token}`"
             target="_black"
             class="menu-item"
           >
