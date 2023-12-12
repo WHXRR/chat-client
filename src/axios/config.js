@@ -70,7 +70,7 @@ function myAxios(axiosConfig) {
     baseURL,
     timeout: 120000,
     headers: {
-      Authorization: store.token || localStorage.getItem('token')
+      Authorization: store.token || localStorage.getItem('token'),
     },
     withCredentials: true,
     ...axiosConfig?.config

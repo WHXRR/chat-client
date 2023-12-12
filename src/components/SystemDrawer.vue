@@ -2,7 +2,7 @@
 import baseURL from "@/axios/base";
 import api from "@/api";
 import socket from "@/socket";
-import WebsiteNavigation from "@/components/WebsiteNavigation.vue"
+import WebsiteNavigation from "@/components/WebsiteNavigation.vue";
 import { computed, ref } from "vue";
 import { useStore } from "@/store/user";
 import { systemStore } from "@/store/system";
@@ -81,7 +81,9 @@ const exit = () => {
   socket.emit("disconnectChat", { id: store.user.id });
 };
 
-const showWebNav = ref(false)
+const showWebNav = ref(false);
+
+const token = store.token.split(" ")[1];
 </script>
 <template>
   <div>
@@ -161,6 +163,16 @@ const showWebNav = ref(false)
             <div>清空聊天记录</div>
             <el-icon :size="20"><Delete /></el-icon>
           </div>
+        </div>
+        <div v-permission="['root']">
+          <a
+            :href="`http://localhost:5173?token=${token}`"
+            target="_black"
+            class="menu-item"
+          >
+            <div>app版本管理系统</div>
+            <el-icon :size="20"><SetUp /></el-icon>
+          </a>
         </div>
         <div class="menu-item" @click="exit">
           <div>退出</div>
