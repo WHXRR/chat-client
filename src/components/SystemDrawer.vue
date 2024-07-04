@@ -10,6 +10,9 @@ import { storeToRefs } from "pinia";
 import { ElNotification } from "element-plus";
 import { setCssVar } from "@/hooks/useSwitchTheme";
 import { Sunny, Moon } from "@element-plus/icons-vue";
+import Clip from "@/components/Clip.vue";
+import ClipVueCropper from "@/components/VueCropper.vue";
+import VideoFrame from "@/components/VideoFrame.vue";
 
 const store = useStore();
 const sysStore = systemStore();
@@ -84,6 +87,9 @@ const exit = () => {
 const showWebNav = ref(false);
 
 const token = store.token.split(" ")[1];
+const clipVisible = ref(false);
+const clipVisible2 = ref(false);
+const videoVisible = ref(false);
 </script>
 <template>
   <div>
@@ -174,6 +180,18 @@ const token = store.token.split(" ")[1];
             <el-icon :size="20"><SetUp /></el-icon>
           </a>
         </div>
+        <div class="menu-item" @click="clipVisible = true" v-permission="['root']">
+          <div>前端裁剪</div>
+          <el-icon :size="20"><Scissor /></el-icon>
+        </div>
+        <div class="menu-item" @click="clipVisible2 = true" v-permission="['root']">
+          <div>前端裁剪 vue-cropper</div>
+          <el-icon :size="20"><Scissor /></el-icon>
+        </div>
+        <div class="menu-item" @click="videoVisible = true" v-permission="['root']">
+          <div>前端视频帧提取</div>
+          <el-icon :size="20"><Scissor /></el-icon>
+        </div>
         <div class="menu-item" @click="exit">
           <div>退出</div>
           <el-icon :size="20"><SwitchButton /></el-icon>
@@ -181,6 +199,9 @@ const token = store.token.split(" ")[1];
       </div>
     </el-drawer>
     <WebsiteNavigation v-model="showWebNav" />
+    <Clip v-model="clipVisible" />
+    <ClipVueCropper v-model="clipVisible2" />
+    <VideoFrame v-model="videoVisible" />
   </div>
 </template>
 <style lang="scss" scoped>
